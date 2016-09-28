@@ -10,19 +10,17 @@ import UIKit
 import Jimsdk
 
 class ViewController: UIViewController {
-
-    @IBOutlet weak var originLabel: UILabel!
-    @IBOutlet weak var urlLabel: UILabel!
+    
+    @IBOutlet weak var contentLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         var client: GoJimsdkClient? = nil
-        GoJimsdkNewClient(&client, nil)
+        GoJimsdkNewClient("http://api2.jimyun.com", "", "", "", &client, nil)
         
         if let client = client {
-            originLabel.text = client.origin()
-            urlLabel.text = client.url()
+            contentLabel.text = String(client.serverTimestamp())
         }
     }
 
