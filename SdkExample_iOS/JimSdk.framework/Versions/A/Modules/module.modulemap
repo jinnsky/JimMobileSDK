@@ -1,0 +1,7 @@
+framework module "Jimsdk" {
+    header "GoJimsdk.h"
+    header "GoUniverse.h"
+    header "Jimsdk.h"
+
+    export *
+}
