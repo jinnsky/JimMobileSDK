@@ -3,18 +3,20 @@ package jimsdk
 import (
   "encoding/json"
 	"errors"
+  "time"
+
   "github.com/parnurzeal/gorequest"
 )
 
 type Client struct {
   ClusterURL string
-  AppID string
+  AppID int
   JimAppID string
   JimAppSecret string
-  ServerTimestamp int64
+  ServerTimestampDiff int64
 }
 
-func NewClient(clusterURL string, appID string, jimAppID string, jimAppSecret string) (*Client, error) {
+func NewClient(clusterURL string, appID int, jimAppID string, jimAppSecret string) (*Client, error) {
   client := &Client {
     ClusterURL: clusterURL,
     AppID: appID,
@@ -26,7 +28,10 @@ func NewClient(clusterURL string, appID string, jimAppID string, jimAppSecret st
     return client, errors.New("ClusterURL must be indicated")
   }
 
-  resp, _, errs := gorequest.New().Post(clusterURL + "/v1/system/base-info").Set("Content-Type", "application/json").End()
+  resp, _, errs := gorequest.New().
+                             Post(clusterURL + "/v1/system/base-info").
+                             Set("Content-Type", "application/json").
+                             End()
 
   if errs != nil {
     return client, errors.New(clusterURL + " isn't reachable")
@@ -43,7 +48,7 @@ func NewClient(clusterURL string, appID string, jimAppID string, jimAppSecret st
     return client, errors.New(clusterURL + " can't response basic info: " + err.Error())
   }
 
-  client.ServerTimestamp = apiResult.Time
+  client.ServerTimestampDiff = apiResult.Time - time.Now().UnixNano() / (1000 * 1000)
 
 	return client, nil
 }

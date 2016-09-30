@@ -10,6 +10,9 @@
 #include "GoUniverse.h"
 
 @class GoJimsdkClient;
+@class GoJimsdkResponseData;
+@protocol GoJimsdkResponseListener;
+@class GoJimsdkResponseListener;
 
 @interface GoJimsdkClient : NSObject {
 }
@@ -18,16 +21,43 @@
 - (id)initWithRef:(id)ref;
 - (NSString*)clusterURL;
 - (void)setClusterURL:(NSString*)v;
-- (NSString*)appID;
-- (void)setAppID:(NSString*)v;
+- (long)appID;
+- (void)setAppID:(long)v;
 - (NSString*)jimAppID;
 - (void)setJimAppID:(NSString*)v;
 - (NSString*)jimAppSecret;
 - (void)setJimAppSecret:(NSString*)v;
-- (int64_t)serverTimestamp;
-- (void)setServerTimestamp:(int64_t)v;
+- (int64_t)serverTimestampDiff;
+- (void)setServerTimestampDiff:(int64_t)v;
+- (GoJimsdkResponseData*)sendVerifyEmail:(NSString*)email;
+- (void)sendVerifyEmailAsync:(NSString*)email listener:(id<GoJimsdkResponseListener>)listener;
 @end
 
-FOUNDATION_EXPORT BOOL GoJimsdkNewClient(NSString* clusterURL, NSString* appID, NSString* jimAppID, NSString* jimAppSecret, GoJimsdkClient** ret0_, NSError** error);
+@interface GoJimsdkResponseData : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (BOOL)result;
+- (void)setResult:(BOOL)v;
+@end
+
+@protocol GoJimsdkResponseListener
+- (void)onFailure:(NSString*)err;
+- (void)onSuccess:(GoJimsdkResponseData*)respData;
+@end
+
+FOUNDATION_EXPORT BOOL GoJimsdkNewClient(NSString* clusterURL, long appID, NSString* jimAppID, NSString* jimAppSecret, GoJimsdkClient** ret0_, NSError** error);
+
+@class GoJimsdkResponseListener;
+
+@interface GoJimsdkResponseListener : NSObject <GoJimsdkResponseListener> {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (void)onFailure:(NSString*)err;
+- (void)onSuccess:(GoJimsdkResponseData*)respData;
+@end
 
 #endif

@@ -11,18 +11,47 @@ import Jimsdk
 
 class ViewController: UIViewController {
     
-    @IBOutlet weak var contentLabel: UILabel!
+    struct SdkConstants {
+        static let ClusterURL = "http://api2.jimyun.com"
+        static let AppID = 23
+        static let JimAppID = "iu3TKjwRUCGfIwtTH9gXeYsq"
+        static let JimAppSecret = "kJek81coyFG4V3eSg79b82HU"
+    }
+    
+    var client: GoJimsdkClient? = nil
+    
+    @IBOutlet weak var emailVerificationButton: UIButton!
+    @IBOutlet weak var emailVerificationIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        var client: GoJimsdkClient? = nil
-        GoJimsdkNewClient("http://api2.jimyun.com", "", "", "", &client, nil)
+        emailVerificationIndicator.isHidden = true
         
-        if let client = client {
-            contentLabel.text = String(client.serverTimestamp())
-        }
+        GoJimsdkNewClient(SdkConstants.ClusterURL,
+                          SdkConstants.AppID,
+                          SdkConstants.JimAppID,
+                          SdkConstants.JimAppSecret,
+                          &client,
+                          nil)
     }
 
+    @IBAction func tapOnEmailVerficationButton(_ sender: AnyObject) {
+        emailVerificationIndicator.isHidden = false
+        emailVerificationIndicator.startAnimating()
+        
+        DispatchQueue.global().async { [weak self] in
+            guard let `self` = self, let sdkClient = self.client else { return }
+            
+            if let responseData = sdkClient.sendVerifyEmail("yangjingtian@oudmon.com") {
+                if responseData.result() {
+                    DispatchQueue.main.async {
+                        self.emailVerificationIndicator.stopAnimating()
+                        self.emailVerificationIndicator.isHidden = true
+                    }
+                }
+            }
+        }
+    }
 }
 
