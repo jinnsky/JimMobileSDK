@@ -1,8 +1,11 @@
 package jimsdk
 
 import (
+  "crypto/md5"
+	"encoding/hex"
   "encoding/json"
 	"errors"
+	"strconv"
   "time"
 
   "github.com/parnurzeal/gorequest"
@@ -14,6 +17,14 @@ type Client struct {
   JimAppID string
   JimAppSecret string
   ServerTimestampDiff int64
+}
+
+func (c *Client) getJimAppSign() (string) {
+  serverTime := strconv.FormatInt(time.Now().UnixNano() / (1000 * 1000) + c.ServerTimestampDiff, 10)
+  hasher := md5.New()
+  hasher.Write([]byte(c.JimAppSecret + serverTime))
+
+  return hex.EncodeToString(hasher.Sum(nil)) + "," + serverTime
 }
 
 func NewClient(clusterURL string, appID int, jimAppID string, jimAppSecret string) (*Client, error) {

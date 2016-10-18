@@ -1,4 +1,5 @@
 framework module "Jimsdk" {
+	header "ref.h"
     header "GoJimsdk.h"
     header "GoUniverse.h"
     header "Jimsdk.h"

@@ -10,9 +10,11 @@
 #include "GoUniverse.h"
 
 @class GoJimsdkClient;
-@class GoJimsdkResponseData;
-@protocol GoJimsdkResponseListener;
-@class GoJimsdkResponseListener;
+@class GoJimsdkRegisterParams;
+@class GoJimsdkRegisterResponse;
+@class GoJimsdkVerifyEmailResponseData;
+@protocol GoJimsdkVerifyEmailResponseListener;
+@class GoJimsdkVerifyEmailResponseListener;
 
 @interface GoJimsdkClient : NSObject {
 }
@@ -29,11 +31,64 @@
 - (void)setJimAppSecret:(NSString*)v;
 - (int64_t)serverTimestampDiff;
 - (void)setServerTimestampDiff:(int64_t)v;
-- (GoJimsdkResponseData*)sendVerifyEmail:(NSString*)email;
-- (void)sendVerifyEmailAsync:(NSString*)email listener:(id<GoJimsdkResponseListener>)listener;
+- (GoJimsdkRegisterResponse*)sendRegister:(GoJimsdkRegisterParams*)params;
+- (GoJimsdkVerifyEmailResponseData*)sendVerifyEmail:(NSString*)email;
+- (void)sendVerifyEmailAsync:(NSString*)email listener:(id<GoJimsdkVerifyEmailResponseListener>)listener;
 @end
 
-@interface GoJimsdkResponseData : NSObject {
+@interface GoJimsdkRegisterParams : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (long)appID;
+- (void)setAppID:(long)v;
+- (NSString*)username;
+- (void)setUsername:(NSString*)v;
+- (NSString*)password;
+- (void)setPassword:(NSString*)v;
+- (NSString*)phone;
+- (void)setPhone:(NSString*)v;
+- (NSString*)email;
+- (void)setEmail:(NSString*)v;
+- (NSString*)weixinOpenID;
+- (void)setWeixinOpenID:(NSString*)v;
+- (NSString*)qqOpenID;
+- (void)setQqOpenID:(NSString*)v;
+- (NSString*)sinaUID;
+- (void)setSinaUID:(NSString*)v;
+- (NSString*)facebookID;
+- (void)setFacebookID:(NSString*)v;
+- (NSString*)twitterID;
+- (void)setTwitterID:(NSString*)v;
+- (NSString*)linkedInID;
+- (void)setLinkedInID:(NSString*)v;
+- (NSString*)verificationCode;
+- (void)setVerificationCode:(NSString*)v;
+@end
+
+@interface GoJimsdkRegisterResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (int64_t)id_;
+- (void)setID:(int64_t)v;
+- (NSString*)username;
+- (void)setUsername:(NSString*)v;
+- (int64_t)registerTime;
+- (void)setRegisterTime:(int64_t)v;
+- (NSString*)email;
+- (void)setEmail:(NSString*)v;
+- (BOOL)emailChecked;
+- (void)setEmailChecked:(BOOL)v;
+- (NSString*)phone;
+- (void)setPhone:(NSString*)v;
+- (BOOL)phoneChecked;
+- (void)setPhoneChecked:(BOOL)v;
+@end
+
+@interface GoJimsdkVerifyEmailResponseData : NSObject {
 }
 @property(strong, readonly) id _ref;
 
@@ -42,22 +97,24 @@
 - (void)setResult:(BOOL)v;
 @end
 
-@protocol GoJimsdkResponseListener
+@protocol GoJimsdkVerifyEmailResponseListener
 - (void)onFailure:(NSString*)err;
-- (void)onSuccess:(GoJimsdkResponseData*)respData;
+- (void)onSuccess:(GoJimsdkVerifyEmailResponseData*)respData;
 @end
 
 FOUNDATION_EXPORT BOOL GoJimsdkNewClient(NSString* clusterURL, long appID, NSString* jimAppID, NSString* jimAppSecret, GoJimsdkClient** ret0_, NSError** error);
 
-@class GoJimsdkResponseListener;
+FOUNDATION_EXPORT GoJimsdkRegisterParams* GoJimsdkNewRegisterParams();
 
-@interface GoJimsdkResponseListener : NSObject <GoJimsdkResponseListener> {
+@class GoJimsdkVerifyEmailResponseListener;
+
+@interface GoJimsdkVerifyEmailResponseListener : NSObject <GoJimsdkVerifyEmailResponseListener> {
 }
 @property(strong, readonly) id _ref;
 
-- (id)initWithRef:(id)ref;
+- (instancetype)initWithRef:(id)ref;
 - (void)onFailure:(NSString*)err;
-- (void)onSuccess:(GoJimsdkResponseData*)respData;
+- (void)onSuccess:(GoJimsdkVerifyEmailResponseData*)respData;
 @end
 
 #endif

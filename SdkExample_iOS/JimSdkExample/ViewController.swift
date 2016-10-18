@@ -23,6 +23,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var emailVerificationButton: UIButton!
     @IBOutlet weak var emailVerificationIndicator: UIActivityIndicatorView!
     
+    @IBOutlet weak var usernameTextField: UITextField!
+    @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var userRegistrationButton: UIButton!
+    @IBOutlet weak var statusLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -49,6 +54,29 @@ class ViewController: UIViewController {
                         self.emailVerificationIndicator.stopAnimating()
                         self.emailVerificationIndicator.isHidden = true
                     }
+                }
+            }
+        }
+    }
+    
+    @IBAction func tapOnUserRegistrationButton(_ sender: AnyObject) {
+        guard let usernameText = self.usernameTextField.text , !usernameText.isEmpty else { return }
+        guard let passwordText = self.passwordTextField.text, !passwordText.isEmpty else { return }
+        
+        DispatchQueue.global().async { [weak self] in
+            guard let `self` = self, let sdkClient = self.client else { return }
+            guard let registerParams = GoJimsdkNewRegisterParams() else { return }
+            
+            registerParams.setUsername(usernameText)
+            registerParams.setPassword(passwordText)
+            
+            if let responseData = sdkClient.sendRegister(registerParams) {
+                DispatchQueue.main.async {
+                    self.statusLabel.text = String(responseData.id_())
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.statusLabel.text = "Failed"
                 }
             }
         }

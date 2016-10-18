@@ -18,11 +18,11 @@
 
 @class GoUniverseerror;
 
-@interface GoUniverseerror : NSObject <GoUniverseerror> {
+@interface GoUniverseerror : NSError <GoUniverseerror> {
 }
 @property(strong, readonly) id _ref;
 
-- (id)initWithRef:(id)ref;
+- (instancetype)initWithRef:(id)ref;
 - (NSString*)error;
 @end
 

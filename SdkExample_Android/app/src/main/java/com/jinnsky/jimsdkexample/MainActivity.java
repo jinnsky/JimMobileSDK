@@ -32,14 +32,14 @@ public class MainActivity extends AppCompatActivity {
         emailVerificationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finalClient.sendVerifyEmailAsync("yangjingtian@oudmon.com", new ResponseListener() {
+                finalClient.sendVerifyEmailAsync("yangjingtian@oudmon.com", new VerifyEmailResponseListener() {
                     @Override
                     public void onFailure(String s) {
                         Toast.makeText(getApplicationContext(), "Sent verification email - Failed. " + s, Toast.LENGTH_LONG).show();
                     }
 
                     @Override
-                    public void onSuccess(ResponseData responseData) {
+                    public void onSuccess(VerifyEmailResponseData responseData) {
                         if (responseData.getResult()) {
                             Toast.makeText(getApplicationContext(), "Sent verification email - OK.", Toast.LENGTH_LONG).show();
                         } else {

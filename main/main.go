@@ -12,7 +12,7 @@ const jimAppSecret = "kJek81coyFG4V3eSg79b82HU"
 
 type tempListener struct {}
 
-func (t *tempListener) OnSuccess(respData *jimsdk.ResponseData) {
+func (t *tempListener) OnSuccess(respData *jimsdk.VerifyEmailResponseData) {
 	if respData.Result {
 		fmt.Println("Sent verification email - OK.")
 	} else {
@@ -31,6 +31,17 @@ func main() {
 		fmt.Println(error)
 	} 
 
-	listener := &tempListener{}
-	client.SendVerifyEmailAsync("yangjingtian@oudmon.com", listener)	
+	// listener := &tempListener{}
+	// client.SendVerifyEmailAsync("yangjingtian@oudmon.com", listener)	
+	
+	registerParams := &jimsdk.RegisterParams{ Username: "testerv1", 
+																						Password: "123456", 
+																						Email: "testerv1@oudmon.com" }	
+	responseData := client.SendRegister(registerParams)
+
+	if responseData != nil {
+		fmt.Println("Username: ", responseData.Username)	
+		fmt.Println("UserID: ", responseData.ID)
+		fmt.Println("Register time: ", responseData.RegisterTime)
+	}
 }
