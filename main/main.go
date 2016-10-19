@@ -12,7 +12,7 @@ const jimAppSecret = "kJek81coyFG4V3eSg79b82HU"
 
 type tempListener struct {}
 
-func (t *tempListener) OnSuccess(respData *jimsdk.VerifyEmailResponseData) {
+func (t *tempListener) OnSuccess(respData *jimsdk.VerifyEmailResponse) {
 	if respData.Result {
 		fmt.Println("Sent verification email - OK.")
 	} else {

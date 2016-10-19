@@ -9,12 +9,85 @@
 #include <Foundation/Foundation.h>
 #include "GoUniverse.h"
 
+@class GoJimsdkBindEmailParams;
+@class GoJimsdkBindEmailResponse;
+@class GoJimsdkBindPhoneParams;
+@class GoJimsdkBindPhoneResponse;
+@class GoJimsdkChangePasswordParams;
+@class GoJimsdkChangePasswordResponse;
 @class GoJimsdkClient;
 @class GoJimsdkRegisterParams;
 @class GoJimsdkRegisterResponse;
-@class GoJimsdkVerifyEmailResponseData;
+@class GoJimsdkVerifyEmailParams;
+@class GoJimsdkVerifyEmailResponse;
+@class GoJimsdkVerifySmsParams;
+@class GoJimsdkVerifySmsResponse;
 @protocol GoJimsdkVerifyEmailResponseListener;
 @class GoJimsdkVerifyEmailResponseListener;
+
+@interface GoJimsdkBindEmailParams : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (long)userID;
+- (void)setUserID:(long)v;
+- (NSString*)email;
+- (void)setEmail:(NSString*)v;
+- (NSString*)verificationCode;
+- (void)setVerificationCode:(NSString*)v;
+@end
+
+@interface GoJimsdkBindEmailResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (BOOL)result;
+- (void)setResult:(BOOL)v;
+@end
+
+@interface GoJimsdkBindPhoneParams : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (long)userID;
+- (void)setUserID:(long)v;
+- (NSString*)phone;
+- (void)setPhone:(NSString*)v;
+- (NSString*)verificationCode;
+- (void)setVerificationCode:(NSString*)v;
+@end
+
+@interface GoJimsdkBindPhoneResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (BOOL)result;
+- (void)setResult:(BOOL)v;
+@end
+
+@interface GoJimsdkChangePasswordParams : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (NSString*)oldPassword;
+- (void)setOldPassword:(NSString*)v;
+- (NSString*)newPassword;
+- (void)setNewPassword:(NSString*)v;
+@end
+
+@interface GoJimsdkChangePasswordResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (BOOL)result;
+- (void)setResult:(BOOL)v;
+@end
 
 @interface GoJimsdkClient : NSObject {
 }
@@ -31,9 +104,13 @@
 - (void)setJimAppSecret:(NSString*)v;
 - (int64_t)serverTimestampDiff;
 - (void)setServerTimestampDiff:(int64_t)v;
+- (GoJimsdkBindEmailResponse*)sendBindEmail:(long)userID email:(NSString*)email verificationCode:(NSString*)verificationCode;
+- (GoJimsdkBindPhoneResponse*)sendBindPhone:(long)userID phone:(NSString*)phone verificationCode:(NSString*)verificationCode;
+- (GoJimsdkChangePasswordResponse*)sendChangePassword:(NSString*)oldPwd newPwd:(NSString*)newPwd;
 - (GoJimsdkRegisterResponse*)sendRegister:(GoJimsdkRegisterParams*)params;
-- (GoJimsdkVerifyEmailResponseData*)sendVerifyEmail:(NSString*)email;
+- (GoJimsdkVerifyEmailResponse*)sendVerifyEmail:(NSString*)email;
 - (void)sendVerifyEmailAsync:(NSString*)email listener:(id<GoJimsdkVerifyEmailResponseListener>)listener;
+- (GoJimsdkVerifySmsResponse*)sendVerifySms:(NSString*)phone;
 @end
 
 @interface GoJimsdkRegisterParams : NSObject {
@@ -88,7 +165,38 @@
 - (void)setPhoneChecked:(BOOL)v;
 @end
 
-@interface GoJimsdkVerifyEmailResponseData : NSObject {
+@interface GoJimsdkVerifyEmailParams : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (long)appID;
+- (void)setAppID:(long)v;
+- (NSString*)email;
+- (void)setEmail:(NSString*)v;
+@end
+
+@interface GoJimsdkVerifyEmailResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (BOOL)result;
+- (void)setResult:(BOOL)v;
+@end
+
+@interface GoJimsdkVerifySmsParams : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (long)appID;
+- (void)setAppID:(long)v;
+- (NSString*)phone;
+- (void)setPhone:(NSString*)v;
+@end
+
+@interface GoJimsdkVerifySmsResponse : NSObject {
 }
 @property(strong, readonly) id _ref;
 
@@ -99,7 +207,7 @@
 
 @protocol GoJimsdkVerifyEmailResponseListener
 - (void)onFailure:(NSString*)err;
-- (void)onSuccess:(GoJimsdkVerifyEmailResponseData*)respData;
+- (void)onSuccess:(GoJimsdkVerifyEmailResponse*)respData;
 @end
 
 FOUNDATION_EXPORT BOOL GoJimsdkNewClient(NSString* clusterURL, long appID, NSString* jimAppID, NSString* jimAppSecret, GoJimsdkClient** ret0_, NSError** error);
@@ -114,7 +222,7 @@ FOUNDATION_EXPORT GoJimsdkRegisterParams* GoJimsdkNewRegisterParams();
 
 - (instancetype)initWithRef:(id)ref;
 - (void)onFailure:(NSString*)err;
-- (void)onSuccess:(GoJimsdkVerifyEmailResponseData*)respData;
+- (void)onSuccess:(GoJimsdkVerifyEmailResponse*)respData;
 @end
 
 #endif

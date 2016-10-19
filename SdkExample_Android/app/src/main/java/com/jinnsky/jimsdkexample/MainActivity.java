@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onSuccess(VerifyEmailResponseData responseData) {
+                    public void onSuccess(VerifyEmailResponse responseData) {
                         if (responseData.getResult()) {
                             Toast.makeText(getApplicationContext(), "Sent verification email - OK.", Toast.LENGTH_LONG).show();
                         } else {
