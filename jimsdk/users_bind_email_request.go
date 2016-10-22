@@ -14,6 +14,7 @@ type BindEmailParams struct {
 
 type BindEmailResponse struct {
   Result bool `json:"result"`
+  Error *ResponseError
 }
 
 func (c *Client) SendBindEmail(userID int, email string, verificationCode string) (*BindEmailResponse) {
@@ -26,11 +27,13 @@ func (c *Client) SendBindEmail(userID int, email string, verificationCode string
                                    Send(payload).
                                    End()
 
-  if errs != nil {
-    return nil
-  }
-
   respData := &BindEmailResponse{}
+
+  respErr := c.processResponse(resp, errs)
+  if respErr != nil {
+    respData.Error = respErr
+    return respData
+  }
 
   if err := json.NewDecoder(resp.Body).Decode(respData); err != nil {
     return nil

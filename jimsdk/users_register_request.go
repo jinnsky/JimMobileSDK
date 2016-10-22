@@ -32,6 +32,7 @@ type RegisterResponse struct {
   EmailChecked bool
   Phone string
   PhoneChecked bool
+  Error *ResponseError
 }
 
 func (c *Client) SendRegister(params *RegisterParams) (*RegisterResponse) {
@@ -44,16 +45,15 @@ func (c *Client) SendRegister(params *RegisterParams) (*RegisterResponse) {
                                    Send(params).
                                    End()
                                    
-  if errs != nil {
-    return nil
+  respData := &RegisterResponse{}
+  
+  respErr := c.processResponse(resp, errs)
+  if respErr != nil {
+    respData.Error = respErr
+    return respData
   }
                                    
-  respData := &RegisterResponse{}
-  v, err := jason.NewObjectFromReader(resp.Body)
-  
-  if err != nil {
-    return nil
-  }
+  v, _ := jason.NewObjectFromReader(resp.Body)
   
   id, _ := v.GetInt64("id")
   username, _ := v.GetString("username")

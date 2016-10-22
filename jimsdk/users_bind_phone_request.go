@@ -14,6 +14,7 @@ type BindPhoneParams struct {
 
 type BindPhoneResponse struct {
   Result bool `json:"result"`
+  Error *ResponseError
 }
 
 func (c *Client) SendBindPhone(userID int, phone string, verificationCode string) (*BindPhoneResponse) {
@@ -25,12 +26,14 @@ func (c *Client) SendBindPhone(userID int, phone string, verificationCode string
                                    Set("JIM-APP-SIGN", c.getJimAppSign()).
                                    Send(payload).
                                    End()
-
-  if errs != nil {
-    return nil
-  }
-
+                                   
   respData := &BindPhoneResponse{}
+
+  respErr := c.processResponse(resp, errs)
+  if respErr != nil {
+    respData.Error = respErr
+    return respData
+  }
 
   if err := json.NewDecoder(resp.Body).Decode(respData); err != nil {
     return nil

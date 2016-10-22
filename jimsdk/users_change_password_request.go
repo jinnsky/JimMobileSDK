@@ -13,6 +13,7 @@ type ChangePasswordParams struct {
 
 type ChangePasswordResponse struct {
   Result bool `json:"result"`
+  Error *ResponseError
 }
 
 func (c *Client) SendChangePassword(oldPwd string, newPwd string) (*ChangePasswordResponse) {
@@ -25,11 +26,13 @@ func (c *Client) SendChangePassword(oldPwd string, newPwd string) (*ChangePasswo
                                    Send(payload).
                                    End()
 
-  if errs != nil {
-    return nil
-  }
-
   respData := &ChangePasswordResponse{}
+
+  respErr := c.processResponse(resp, errs)
+  if respErr != nil {
+    respData.Error = respErr
+    return respData
+  }
 
   if err := json.NewDecoder(resp.Body).Decode(respData); err != nil {
     return nil

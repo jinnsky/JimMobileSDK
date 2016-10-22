@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
   "encoding/json"
 	"errors"
+  "fmt"
 	"strconv"
   "time"
 
@@ -62,4 +63,32 @@ func NewClient(clusterURL string, appID int, jimAppID string, jimAppSecret strin
   client.ServerTimestampDiff = apiResult.Time - time.Now().UnixNano() / (1000 * 1000)
 
 	return client, nil
+}
+
+type ResponseError struct {
+  Key string `json:"key"`
+  Message string `json:"message"`
+}
+
+func CatchResponseError(respError *ResponseError) bool {
+    return (respError != nil) 
+}
+
+func (c *Client) processResponse(resp gorequest.Response, errs []error) *ResponseError {
+  respData := &ResponseError{}
+
+  if errs != nil {
+    respData.Key = "Unexpected errors"
+    respData.Message = fmt.Sprint(errs)
+
+    return respData
+  }
+
+  if resp.StatusCode == 422 {
+    if err := json.NewDecoder(resp.Body).Decode(respData); err == nil {
+      return respData
+    }
+  }
+
+  return nil
 }

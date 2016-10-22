@@ -40,8 +40,12 @@ func main() {
 	responseData := client.SendRegister(registerParams)
 
 	if responseData != nil {
-		fmt.Println("Username: ", responseData.Username)	
-		fmt.Println("UserID: ", responseData.ID)
-		fmt.Println("Register time: ", responseData.RegisterTime)
+		if jimsdk.CatchResponseError(responseData.Error) {
+			fmt.Println(responseData.Error.Key, responseData.Error.Message)
+		} else {
+			fmt.Println("Username: ", responseData.Username)	
+			fmt.Println("UserID: ", responseData.ID)
+			fmt.Println("Register time: ", responseData.RegisterTime)
+		}
 	}
 }

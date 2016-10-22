@@ -71,8 +71,14 @@ class ViewController: UIViewController {
             registerParams.setPassword(passwordText)
             
             if let responseData = sdkClient.sendRegister(registerParams) {
-                DispatchQueue.main.async {
-                    self.statusLabel.text = String(responseData.id_())
+                if let responseError = responseData.error() {
+                    DispatchQueue.main.async {
+                        self.statusLabel.text = responseError.message()
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.statusLabel.text = String(responseData.id_())
+                    }
                 }
             } else {
                 DispatchQueue.main.async {

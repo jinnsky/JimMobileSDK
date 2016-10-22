@@ -13,11 +13,12 @@ type VerifyEmailParams struct {
 
 type VerifyEmailResponse struct {
   Result bool `json:"result"`
+  Error *ResponseError
 }
 
 type VerifyEmailResponseListener interface {
 	OnSuccess(respData *VerifyEmailResponse)
-	OnFailure(err string)
+	OnFailure(respErr *ResponseError)
 }
 
 func (c *Client) SendVerifyEmail(email string) (*VerifyEmailResponse) {
@@ -30,11 +31,13 @@ func (c *Client) SendVerifyEmail(email string) (*VerifyEmailResponse) {
                                    Send(payload).
                                    End()
 
-  if errs != nil {
-    return nil
-  }
-
   respData := &VerifyEmailResponse{}
+  
+  respErr := c.processResponse(resp, errs)
+  if respErr != nil {
+    respData.Error = respErr
+    return respData
+  }
 
 	if err := json.NewDecoder(resp.Body).Decode(respData); err != nil {
     return nil
@@ -44,28 +47,27 @@ func (c *Client) SendVerifyEmail(email string) (*VerifyEmailResponse) {
 }
 
 func (c *Client) SendVerifyEmailAsync(email string, listener VerifyEmailResponseListener) {
-  type payloadType struct {
-	  AppID int `json:"app-id"`
-    Email string `json:"email"`
-  }
-
-  myPayload := payloadType{ AppID: c.AppID, Email: email }
+  payload := VerifyEmailParams{ AppID: c.AppID, Email: email }
 
   gorequest.New().Post(c.ClusterURL + "/v1/users/send-verify-email").
                   Set("Content-Type", "application/json").
                   Set("JIM-APP-ID", c.JimAppID).
                   Set("JIM-APP-SIGN", c.getJimAppSign()).
-                  Send(myPayload).
+                  Send(payload).
                   End(func (resp gorequest.Response, body string, errs []error)  {
                     if listener != nil {
-                      if errs != nil {
-                        listener.OnFailure("Request failed.")
-                      }
-                      
                       respData := &VerifyEmailResponse{}
+
+                      respErr := c.processResponse(resp, errs)
+                      if respErr != nil {
+                        listener.OnFailure(respErr)
+                        return
+                      }
                                        
                       if err := json.NewDecoder(resp.Body).Decode(respData); err != nil {
-                        listener.OnFailure("Decode failed.")
+                        respErr := &ResponseError{ Key: "JSON Decode", Message: "Decode failed" }
+                        listener.OnFailure(respErr)
+                        return
                       }
                                        
                       listener.OnSuccess(respData)

@@ -20,10 +20,7 @@ public class MainActivity extends AppCompatActivity {
         Client client = null;
 
         try {
-            client = Jimsdk.newClient("http://api2.jimyun.com",
-                                             23,
-                                             "iu3TKjwRUCGfIwtTH9gXeYsq",
-                                             "kJek81coyFG4V3eSg79b82HU");
+            client = Jimsdk.newClient("http://api2.jimyun.com", 23, "iu3TKjwRUCGfIwtTH9gXeYsq", "kJek81coyFG4V3eSg79b82HU");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -34,13 +31,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 finalClient.sendVerifyEmailAsync("yangjingtian@oudmon.com", new VerifyEmailResponseListener() {
                     @Override
-                    public void onFailure(String s) {
-                        Toast.makeText(getApplicationContext(), "Sent verification email - Failed. " + s, Toast.LENGTH_LONG).show();
+                    public void onFailure(ResponseError responseError) {
+                        Toast.makeText(getApplicationContext(), "Sent verification email - Failed. " + responseError.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override
-                    public void onSuccess(VerifyEmailResponse responseData) {
-                        if (responseData.getResult()) {
+                    public void onSuccess(VerifyEmailResponse verifyEmailResponse) {
+                        if (verifyEmailResponse.getResult()) {
                             Toast.makeText(getApplicationContext(), "Sent verification email - OK.", Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(getApplicationContext(), "Sent verification email - Failed.", Toast.LENGTH_LONG).show();

@@ -13,6 +13,7 @@ type VerifySmsParams struct {
 
 type VerifySmsResponse struct {
   Result bool `json:"result"`
+  Error *ResponseError
 }
 
 func (c *Client) SendVerifySms(phone string) (*VerifySmsResponse) {
@@ -24,12 +25,14 @@ func (c *Client) SendVerifySms(phone string) (*VerifySmsResponse) {
                                    Set("JIM-APP-SIGN", c.getJimAppSign()).
                                    Send(payload).
                                    End()
-
-  if errs != nil {
-    return nil
-  }
-
+  
   respData := &VerifySmsResponse{}
+
+  respErr := c.processResponse(resp, errs)
+  if respErr != nil {
+    respData.Error = respErr
+    return respData
+  }
 
 	if err := json.NewDecoder(resp.Body).Decode(respData); err != nil {
     return nil
