@@ -1,7 +1,6 @@
 package jimsdk
 
 import (
-  "github.com/parnurzeal/gorequest"
   "github.com/antonholmquist/jason"
 )
 
@@ -37,13 +36,11 @@ type RegisterResponse struct {
 
 func (c *Client) SendRegister(params *RegisterParams) (*RegisterResponse) {
   params.AppID = c.AppID
-  
-  resp, _, errs := gorequest.New().Post(c.ClusterURL + "/v1/users/register").
-                                   Set("Content-Type", "application/json").
-                                   Set("JIM-APP-ID", c.JimAppID).
-                                   Set("JIM-APP-SIGN", c.getJimAppSign()).
-                                   Send(params).
-                                   End()
+
+  resp, _, errs := c.getRequest().Post(c.ClusterURL + "/v1/users/register").
+                                  Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                  Send(params).
+                                  End()
                                    
   respData := &RegisterResponse{}
   

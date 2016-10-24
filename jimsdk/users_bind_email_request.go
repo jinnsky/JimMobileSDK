@@ -2,8 +2,6 @@ package jimsdk
 
 import (
   "encoding/json"
-
-  "github.com/parnurzeal/gorequest"
 )
 
 type BindEmailParams struct {
@@ -20,12 +18,10 @@ type BindEmailResponse struct {
 func (c *Client) SendBindEmail(userID int, email string, verificationCode string) (*BindEmailResponse) {
   payload := BindEmailParams{ UserID: userID, Email: email, VerificationCode: verificationCode }
 
-  resp, _, errs := gorequest.New().Post(c.ClusterURL + "/v1/users/bind-email").
-                                   Set("Content-Type", "application/json").
-                                   Set("JIM-APP-ID", c.JimAppID).
-                                   Set("JIM-APP-SIGN", c.getJimAppSign()).
-                                   Send(payload).
-                                   End()
+  resp, _, errs := c.getRequest().Post(c.ClusterURL + "/v1/users/bind-email").
+                                  Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                  Send(payload).
+                                  End()
 
   respData := &BindEmailResponse{}
 

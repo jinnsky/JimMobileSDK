@@ -18,6 +18,7 @@ type Client struct {
   JimAppID string
   JimAppSecret string
   ServerTimestampDiff int64
+  RequestTimeout int
 }
 
 func (c *Client) getJimAppSign() (string) {
@@ -63,6 +64,17 @@ func NewClient(clusterURL string, appID int, jimAppID string, jimAppSecret strin
   client.ServerTimestampDiff = apiResult.Time - time.Now().UnixNano() / (1000 * 1000)
 
 	return client, nil
+}
+
+func (c *Client) getRequest() *gorequest.SuperAgent {
+  request := gorequest.New().Set("Content-Type", "application/json").
+                             Set("JIM-APP-ID", c.JimAppID)
+
+  if c.RequestTimeout > 0 {
+    request.Timeout(time.Duration(c.RequestTimeout) * time.Millisecond)
+  }                           
+
+  return request
 }
 
 type ResponseError struct {

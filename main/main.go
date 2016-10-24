@@ -20,12 +20,13 @@ func (t *tempListener) OnSuccess(respData *jimsdk.VerifyEmailResponse) {
 	}
 }
 
-func (t *tempListener) OnFailure(err string) {
-	fmt.Println(err)
+func (t *tempListener) OnFailure(respErr *jimsdk.ResponseError) {
+	fmt.Println(respErr.Key, respErr.Message)
 }
 
 func main() {
 	client, error := jimsdk.NewClient(clusterURL, appID, jimAppID, jimAppSecret)
+	// client.RequestTimeout = 2
 
 	if error != nil {
 		fmt.Println(error)

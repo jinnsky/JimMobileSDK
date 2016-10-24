@@ -24,12 +24,10 @@ type VerifyEmailResponseListener interface {
 func (c *Client) SendVerifyEmail(email string) (*VerifyEmailResponse) {
   payload := VerifyEmailParams{ AppID: c.AppID, Email: email }
 
-  resp, _, errs := gorequest.New().Post(c.ClusterURL + "/v1/users/send-verify-email").
-                                   Set("Content-Type", "application/json").
-                                   Set("JIM-APP-ID", c.JimAppID).
-                                   Set("JIM-APP-SIGN", c.getJimAppSign()).
-                                   Send(payload).
-                                   End()
+  resp, _, errs := c.getRequest().Post(c.ClusterURL + "/v1/users/send-verify-email").
+                                  Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                  Send(payload).
+                                  End()
 
   respData := &VerifyEmailResponse{}
   
@@ -49,28 +47,26 @@ func (c *Client) SendVerifyEmail(email string) (*VerifyEmailResponse) {
 func (c *Client) SendVerifyEmailAsync(email string, listener VerifyEmailResponseListener) {
   payload := VerifyEmailParams{ AppID: c.AppID, Email: email }
 
-  gorequest.New().Post(c.ClusterURL + "/v1/users/send-verify-email").
-                  Set("Content-Type", "application/json").
-                  Set("JIM-APP-ID", c.JimAppID).
-                  Set("JIM-APP-SIGN", c.getJimAppSign()).
-                  Send(payload).
-                  End(func (resp gorequest.Response, body string, errs []error)  {
-                    if listener != nil {
-                      respData := &VerifyEmailResponse{}
+  c.getRequest().Post(c.ClusterURL + "/v1/users/send-verify-email").
+                 Set("JIM-APP-SIGN", c.getJimAppSign()).
+                 Send(payload).
+                 End(func (resp gorequest.Response, body string, errs []error)  {
+                   if listener != nil {
+                     respData := &VerifyEmailResponse{}
 
-                      respErr := c.processResponse(resp, errs)
-                      if respErr != nil {
-                        listener.OnFailure(respErr)
-                        return
-                      }
-                                       
-                      if err := json.NewDecoder(resp.Body).Decode(respData); err != nil {
-                        respErr := &ResponseError{ Key: "JSON Decode", Message: "Decode failed" }
-                        listener.OnFailure(respErr)
-                        return
-                      }
-                                       
-                      listener.OnSuccess(respData)
-                    }
-                  })
+                     respErr := c.processResponse(resp, errs)
+                     if respErr != nil {
+                       listener.OnFailure(respErr)
+                       return
+                     }
+
+                     if err := json.NewDecoder(resp.Body).Decode(respData); err != nil {
+                       respErr := &ResponseError{ Key: "JSON Decode", Message: "Decode failed" }
+                       listener.OnFailure(respErr)
+                       return
+                     }
+                    
+                     listener.OnSuccess(respData)
+                   }
+                 })
 }
