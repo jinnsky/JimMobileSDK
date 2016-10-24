@@ -24,7 +24,7 @@ type VerifyEmailResponseListener interface {
 func (c *Client) SendVerifyEmail(email string) (*VerifyEmailResponse) {
   payload := VerifyEmailParams{ AppID: c.AppID, Email: email }
 
-  resp, _, errs := c.getRequest().Post(c.ClusterURL + "/v1/users/send-verify-email").
+  resp, _, errs := c.getRequest().Post(c.ClusterURL + VerifyEmailRouter).
                                   Set("JIM-APP-SIGN", c.getJimAppSign()).
                                   Send(payload).
                                   End()
@@ -47,10 +47,10 @@ func (c *Client) SendVerifyEmail(email string) (*VerifyEmailResponse) {
 func (c *Client) SendVerifyEmailAsync(email string, listener VerifyEmailResponseListener) {
   payload := VerifyEmailParams{ AppID: c.AppID, Email: email }
 
-  c.getRequest().Post(c.ClusterURL + "/v1/users/send-verify-email").
+  c.getRequest().Post(c.ClusterURL + VerifyEmailRouter).
                  Set("JIM-APP-SIGN", c.getJimAppSign()).
                  Send(payload).
-                 End(func (resp gorequest.Response, body string, errs []error)  {
+                 End(func (resp gorequest.Response, body string, errs []error) {
                    if listener != nil {
                      respData := &VerifyEmailResponse{}
 

@@ -19,7 +19,7 @@ type VerifySmsResponse struct {
 func (c *Client) SendVerifySms(phone string) (*VerifySmsResponse) {
   payload := VerifySmsParams{ AppID: c.AppID, Phone: phone }
 
-  resp, _, errs := gorequest.New().Post(c.ClusterURL + "/v1/users/send-verify-sms").
+  resp, _, errs := gorequest.New().Post(c.ClusterURL + VerifySmsRouter).
                                    Set("Content-Type", "application/json").
                                    Set("JIM-APP-ID", c.JimAppID).
                                    Set("JIM-APP-SIGN", c.getJimAppSign()).

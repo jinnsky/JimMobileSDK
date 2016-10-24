@@ -12,6 +12,15 @@ import (
   "github.com/parnurzeal/gorequest"
 )
 
+const (
+  BindEmailRouter = "/v1/users/bind-email"
+  BindPhoneRouter = "/v1/users/bind-phone"
+  ChangePasswordRouter = "/v1/users/change-password"
+  RegisterRouter = "/v1/users/register"
+  VerifyEmailRouter = "/v1/users/send-verify-email"
+  VerifySmsRouter = "/v1/users/send-verify-sms"
+)
+
 type Client struct {
   ClusterURL string
   AppID int
