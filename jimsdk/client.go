@@ -16,6 +16,7 @@ const (
   BindEmailRouter = "/v1/users/bind-email"
   BindPhoneRouter = "/v1/users/bind-phone"
   ChangePasswordRouter = "/v1/users/change-password"
+  LoginRouter = "/v1/users/login"
   RegisterRouter = "/v1/users/register"
   VerifyEmailRouter = "/v1/users/send-verify-email"
   VerifySmsRouter = "/v1/users/send-verify-sms"
@@ -96,18 +97,18 @@ func CatchResponseError(respError *ResponseError) bool {
 }
 
 func (c *Client) processResponse(resp gorequest.Response, errs []error) *ResponseError {
-  respData := &ResponseError{}
+  respError := &ResponseError{}
 
   if errs != nil {
-    respData.Key = "Unexpected errors"
-    respData.Message = fmt.Sprint(errs)
+    respError.Key = "Unexpected errors"
+    respError.Message = fmt.Sprint(errs)
 
-    return respData
+    return respError
   }
 
   if resp.StatusCode == 422 {
-    if err := json.NewDecoder(resp.Body).Decode(respData); err == nil {
-      return respData
+    if err := json.NewDecoder(resp.Body).Decode(respError); err == nil {
+      return respError
     }
   }
 

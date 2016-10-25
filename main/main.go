@@ -26,27 +26,46 @@ func (t *tempListener) OnFailure(respErr *jimsdk.ResponseError) {
 
 func main() {
 	client, error := jimsdk.NewClient(clusterURL, appID, jimAppID, jimAppSecret)
-	// client.RequestTimeout = 2
 
 	if error != nil {
 		fmt.Println(error)
 	} 
 
-	// listener := &tempListener{}
-	// client.SendVerifyEmailAsync("yangjingtian@oudmon.com", listener)	
+	// Test request timeout
+	client.RequestTimeout = 2
+
+	listener := &tempListener{}
+	client.SendVerifyEmailAsync("yangjingtian@oudmon.com", listener)	
+
+	// Remove request timeout
+	client.RequestTimeout = 0
 	
 	registerParams := &jimsdk.RegisterParams{ Username: "testerv1", 
 																						Password: "123456", 
 																						Email: "testerv1@oudmon.com" }	
-	responseData := client.SendRegister(registerParams)
+	registerResponseData := client.SendRegister(registerParams)
 
-	if responseData != nil {
-		if jimsdk.CatchResponseError(responseData.Error) {
-			fmt.Println(responseData.Error.Key, responseData.Error.Message)
+	if registerResponseData != nil {
+		if jimsdk.CatchResponseError(registerResponseData.Error) {
+			fmt.Println(registerResponseData.Error.Key, registerResponseData.Error.Message)
 		} else {
-			fmt.Println("Username: ", responseData.Username)	
-			fmt.Println("UserID: ", responseData.ID)
-			fmt.Println("Register time: ", responseData.RegisterTime)
+			fmt.Println("Username: ", registerResponseData.Username)	
+			fmt.Println("UserID: ", registerResponseData.ID)
+			fmt.Println("Register time: ", registerResponseData.RegisterTime)
+		}
+	}
+
+	loginParams := &jimsdk.LoginParams{ Username: "testerv2",
+																			Password: "123456" }
+	loginResponseData := client.SendLogin(loginParams)
+
+	if loginResponseData != nil {
+		if jimsdk.CatchResponseError(loginResponseData.Error) {
+			fmt.Println(loginResponseData.Error.Key, loginResponseData.Error.Message)
+		} else {
+			fmt.Println("Username: ", loginResponseData.Username)	
+			fmt.Println("UserID: ", loginResponseData.ID)
+			fmt.Println("Register time: ", loginResponseData.RegisterTime)
 		}
 	}
 }
