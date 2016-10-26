@@ -2,8 +2,6 @@ package jimsdk
 
 import (
   "encoding/json"
-
-  "github.com/parnurzeal/gorequest"
 )
 
 type VerifySmsParams struct {
@@ -19,12 +17,10 @@ type VerifySmsResponse struct {
 func (c *Client) SendVerifySms(phone string) (*VerifySmsResponse) {
   payload := VerifySmsParams{ AppID: c.AppID, Phone: phone }
 
-  resp, _, errs := gorequest.New().Post(c.ClusterURL + VerifySmsRouter).
-                                   Set("Content-Type", "application/json").
-                                   Set("JIM-APP-ID", c.JimAppID).
-                                   Set("JIM-APP-SIGN", c.getJimAppSign()).
-                                   Send(payload).
-                                   End()
+  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + VerifySmsRouter).
+                                       Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Send(payload).
+                                       End()
   
   respData := &VerifySmsResponse{}
 

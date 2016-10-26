@@ -6,6 +6,7 @@ import (
   "encoding/json"
 	"errors"
   "fmt"
+  "math"
 	"strconv"
   "time"
 
@@ -29,6 +30,7 @@ type Client struct {
   JimAppSecret string
   ServerTimestampDiff int64
   RequestTimeout int
+  requestAgent *gorequest.SuperAgent
 }
 
 func (c *Client) getJimAppSign() (string) {
@@ -51,10 +53,8 @@ func NewClient(clusterURL string, appID int, jimAppID string, jimAppSecret strin
     return client, errors.New("ClusterURL must be indicated")
   }
 
-  resp, _, errs := gorequest.New().
-                             Post(clusterURL + "/v1/system/base-info").
-                             Set("Content-Type", "application/json").
-                             End()
+  request := gorequest.New().Set("Content-Type", "application/json")
+  resp, _, errs := request.Post(clusterURL + "/v1/system/base-info").End()
 
   if errs != nil {
     return client, errors.New(clusterURL + " isn't reachable")
@@ -71,20 +71,18 @@ func NewClient(clusterURL string, appID int, jimAppID string, jimAppSecret strin
     return client, errors.New(clusterURL + " can't response basic info: " + err.Error())
   }
 
+  client.requestAgent = request.Set("JIM-APP-ID", jimAppID)
   client.ServerTimestampDiff = apiResult.Time - time.Now().UnixNano() / (1000 * 1000)
 
 	return client, nil
 }
 
-func (c *Client) getRequest() *gorequest.SuperAgent {
-  request := gorequest.New().Set("Content-Type", "application/json").
-                             Set("JIM-APP-ID", c.JimAppID)
+func (c *Client) getRequestAgent() *gorequest.SuperAgent {
+  if c.RequestTimeout >= 0 {
+    return c.requestAgent.Timeout(time.Duration(c.RequestTimeout) * time.Millisecond)
+  }
 
-  if c.RequestTimeout > 0 {
-    request.Timeout(time.Duration(c.RequestTimeout) * time.Millisecond)
-  }                           
-
-  return request
+  return c.requestAgent.Timeout(time.Duration(math.MaxUint32) * time.Millisecond)
 }
 
 type ResponseError struct {

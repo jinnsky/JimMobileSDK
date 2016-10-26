@@ -42,10 +42,10 @@ type LoginResponse struct {
 func (c *Client) SendLogin(params *LoginParams) (*LoginResponse) {
   params.AppID = c.AppID
 
-  resp, _, errs := c.getRequest().Post(c.ClusterURL + LoginRouter).
-                                  Set("JIM-APP-SIGN", c.getJimAppSign()).
-                                  Send(params).
-                                  End()
+  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + LoginRouter).
+                                       Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Send(params).
+                                       End()
                                    
   respData := &LoginResponse{}
   

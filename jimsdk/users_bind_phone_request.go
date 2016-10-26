@@ -18,10 +18,10 @@ type BindPhoneResponse struct {
 func (c *Client) SendBindPhone(userID int, phone string, verificationCode string) (*BindPhoneResponse) {
   payload := BindPhoneParams{ UserID: userID, Phone: phone, VerificationCode: verificationCode }
 
-  resp, _, errs := c.getRequest().Post(c.ClusterURL + BindPhoneRouter).
-                                  Set("JIM-APP-SIGN", c.getJimAppSign()).
-                                  Send(payload).
-                                  End()
+  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + BindPhoneRouter).
+                                       Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Send(payload).
+                                       End()
                                    
   respData := &BindPhoneResponse{}
 

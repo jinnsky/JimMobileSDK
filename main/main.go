@@ -38,7 +38,7 @@ func main() {
 	client.SendVerifyEmailAsync("yangjingtian@oudmon.com", listener)	
 
 	// Remove request timeout
-	client.RequestTimeout = 0
+	client.RequestTimeout = -1
 	
 	registerParams := &jimsdk.RegisterParams{ Username: "testerv1", 
 																						Password: "123456", 
@@ -56,7 +56,7 @@ func main() {
 	}
 
 	loginParams := &jimsdk.LoginParams{ Username: "testerv2",
-																			Password: "123456" }
+																			Password: "654321" }
 	loginResponseData := client.SendLogin(loginParams)
 
 	if loginResponseData != nil {
@@ -66,6 +66,20 @@ func main() {
 			fmt.Println("Username: ", loginResponseData.Username)	
 			fmt.Println("UserID: ", loginResponseData.ID)
 			fmt.Println("Register time: ", loginResponseData.RegisterTime)
+		}
+	}
+
+	changePasswordResponseData := client.SendChangePassword("123456", "654321")
+
+	if changePasswordResponseData != nil {
+		if jimsdk.CatchResponseError(changePasswordResponseData.Error) {
+			fmt.Println(changePasswordResponseData.Error.Key, changePasswordResponseData.Error.Message)
+		} else {
+			if changePasswordResponseData.Result {
+				fmt.Println("Changed password - OK.")
+			} else {
+				fmt.Println("Changed password - Failed.")
+			}
 		}
 	}
 }

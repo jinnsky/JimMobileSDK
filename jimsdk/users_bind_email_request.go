@@ -18,10 +18,10 @@ type BindEmailResponse struct {
 func (c *Client) SendBindEmail(userID int, email string, verificationCode string) (*BindEmailResponse) {
   payload := BindEmailParams{ UserID: userID, Email: email, VerificationCode: verificationCode }
 
-  resp, _, errs := c.getRequest().Post(c.ClusterURL + BindEmailRouter).
-                                  Set("JIM-APP-SIGN", c.getJimAppSign()).
-                                  Send(payload).
-                                  End()
+  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + BindEmailRouter).
+                                       Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Send(payload).
+                                       End()
 
   respData := &BindEmailResponse{}
 

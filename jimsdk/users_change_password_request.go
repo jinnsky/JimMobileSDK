@@ -17,10 +17,10 @@ type ChangePasswordResponse struct {
 func (c *Client) SendChangePassword(oldPwd string, newPwd string) (*ChangePasswordResponse) {
   payload := ChangePasswordParams{ OldPassword: oldPwd, NewPassword: newPwd }
 
-  resp, _, errs := c.getRequest().Post(c.ClusterURL + ChangePasswordRouter).
-                                  Set("JIM-APP-SIGN", c.getJimAppSign()).
-                                  Send(payload).
-                                  End()
+  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + ChangePasswordRouter).
+                                       Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Send(payload).
+                                       End()
 
   respData := &ChangePasswordResponse{}
 

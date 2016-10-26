@@ -37,10 +37,10 @@ type RegisterResponse struct {
 func (c *Client) SendRegister(params *RegisterParams) (*RegisterResponse) {
   params.AppID = c.AppID
 
-  resp, _, errs := c.getRequest().Post(c.ClusterURL + RegisterRouter).
-                                  Set("JIM-APP-SIGN", c.getJimAppSign()).
-                                  Send(params).
-                                  End()
+  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + RegisterRouter).
+                                       Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Send(params).
+                                       End()
                                    
   respData := &RegisterResponse{}
   
