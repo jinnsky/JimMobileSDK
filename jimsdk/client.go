@@ -17,10 +17,16 @@ const (
   BindEmailRouter = "/v1/users/bind-email"
   BindPhoneRouter = "/v1/users/bind-phone"
   ChangePasswordRouter = "/v1/users/change-password"
+  FacebookUserRouter = "/v1/users/is-has-facebook-user-by-access-token"
+  LinkedInUserRouter = "/v1/users/is-has-linkin-user"
   LoginRouter = "/v1/users/login"
+  QqUserRouter = "/v1/users/is-has-qq-user"
   RegisterRouter = "/v1/users/register"
+  TwitterUserRouter = "/v1/users/is-has-twitter-user"
   VerifyEmailRouter = "/v1/users/send-verify-email"
   VerifySmsRouter = "/v1/users/send-verify-sms"
+  WeiboUserRouter = "/v1/users/is-has-sina-weibo-user"
+  WeixinUserRouter = "/v1/users/is-has-weixin-user"
 )
 
 type Client struct {
