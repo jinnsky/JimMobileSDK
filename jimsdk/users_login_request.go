@@ -7,7 +7,7 @@ import (
 type LoginParams struct {
   AppID int `json:"app-id"`
   Username string `json:"username,omitempty"`
-  Password string `json:"password"`
+  Password string `json:"password,omitempty"`
   Email string `json:"email,omitempty"`
   Phone string `json:"phone,omitempty"`
   WeixinOpenID string `json:"weixin-openid,omitempty"`

@@ -4,26 +4,21 @@ import (
   "github.com/antonholmquist/jason"
 )
 
-type RegisterParams struct {
-  AppID int `json:"app-id"`
-  Username string `json:"username,omitempty"`
-  Password string `json:"password,omitempty"`
-  Phone string `json:"phone,omitempty"`
-  Email string `json:"email,omitempty"`
-  WeixinOpenID string `json:"weixin-openid,omitempty"`
-  QqOpenID string `json:"qq-openid,omitempty"`
-  SinaUID string `json:"sina-uid,omitempty"`
-  FacebookID string `json:"facebook-id,omitempty"`
-  TwitterID string `json:"twitter-id,omitempty"`
-  LinkedInID string `json:"linkin-id,omitempty"`
-  VerificationCode string `json:"code,omitempty"`
+type UpdateUserParams struct {
+  SubUserID int `json:"sub-users-id,omitempty"`
+  Nickname string `json:"nickname,omitempty"`
+  Height int `json:"height,omitempty"`
+  Weight int `json:"weight,omitempty"`
+  Gender int `json:"sex,omitempty"`
+  Birthday string `json:"birthday,omitempty"`
+  CaseHistory string `json:"case-history,omitempty"`
 }
 
-func NewRegisterParams() (*RegisterParams) {
-  return &RegisterParams{}
+func NewUpdateUserParams() (*UpdateUserParams) {
+  return &UpdateUserParams{}
 }
 
-type RegisterResponse struct {
+type UpdateUserResponse struct {
   ID int64
   Username string
   RegisterTime int64
@@ -40,15 +35,13 @@ type RegisterResponse struct {
   Error *ResponseError
 }
 
-func (c *Client) SendRegister(params *RegisterParams) (*RegisterResponse) {
-  params.AppID = c.AppID
-
-  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + RegisterRouter).
+func (c *Client) SendUpdateUser(params *UpdateUserParams) (*UpdateUserResponse) {
+  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + UpdateUserRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
                                        Send(params).
                                        End()
                                    
-  respData := &RegisterResponse{}
+  respData := &UpdateUserResponse{}
   
   respErr := c.processResponse(resp, errs)
   if respErr != nil {

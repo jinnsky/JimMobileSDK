@@ -4,26 +4,12 @@ import (
   "github.com/antonholmquist/jason"
 )
 
-type RegisterParams struct {
-  AppID int `json:"app-id"`
-  Username string `json:"username,omitempty"`
-  Password string `json:"password,omitempty"`
-  Phone string `json:"phone,omitempty"`
-  Email string `json:"email,omitempty"`
-  WeixinOpenID string `json:"weixin-openid,omitempty"`
-  QqOpenID string `json:"qq-openid,omitempty"`
-  SinaUID string `json:"sina-uid,omitempty"`
-  FacebookID string `json:"facebook-id,omitempty"`
-  TwitterID string `json:"twitter-id,omitempty"`
-  LinkedInID string `json:"linkin-id,omitempty"`
-  VerificationCode string `json:"code,omitempty"`
+type UserInfoParams struct {
+  UserID int `json:"users-id"`
+  SubUserID int `json:"sub-users-id,omitempty"`
 }
 
-func NewRegisterParams() (*RegisterParams) {
-  return &RegisterParams{}
-}
-
-type RegisterResponse struct {
+type UserInfoResponse struct {
   ID int64
   Username string
   RegisterTime int64
@@ -40,22 +26,26 @@ type RegisterResponse struct {
   Error *ResponseError
 }
 
-func (c *Client) SendRegister(params *RegisterParams) (*RegisterResponse) {
-  params.AppID = c.AppID
+func (c *Client) SendUserInfo(userID int, subUserID int) (*UserInfoResponse) {
+  payload := UserInfoParams{ UserID: userID }
 
-  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + RegisterRouter).
+  if (subUserID > 0) {
+    payload.SubUserID = subUserID
+  }
+
+  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + UserInfoRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
-                                       Send(params).
+                                       Send(payload).
                                        End()
-                                   
-  respData := &RegisterResponse{}
+
+  respData := &UserInfoResponse{}
   
   respErr := c.processResponse(resp, errs)
   if respErr != nil {
     respData.Error = respErr
     return respData
   }
-                                   
+
   v, _ := jason.NewObjectFromReader(resp.Body)
   
   id, _ := v.GetInt64("id")
@@ -85,6 +75,6 @@ func (c *Client) SendRegister(params *RegisterParams) (*RegisterResponse) {
   respData.InfoHeight = int(height)
   respData.InfoWeight = int(weight)
   respData.InfoGender = int(gender)
-  
+
   return respData
 }

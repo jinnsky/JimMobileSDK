@@ -4,7 +4,7 @@ import (
   "github.com/antonholmquist/jason"
 )
 
-type RegisterParams struct {
+type RegisterInfoParams struct {
   AppID int `json:"app-id"`
   Username string `json:"username,omitempty"`
   Password string `json:"password,omitempty"`
@@ -17,13 +17,20 @@ type RegisterParams struct {
   TwitterID string `json:"twitter-id,omitempty"`
   LinkedInID string `json:"linkin-id,omitempty"`
   VerificationCode string `json:"code,omitempty"`
+  Nickname string `json:"nickname,omitempty"`
+  Height float32 `json:"height,omitempty"`
+  Weight float32 `json:"weight,omitempty"`
+  Gender int `json:"sex,omitempty"`
+  CaseHistory string `json:"case-history,omitempty"`
+  Birthday string `json:"birthday,omitempty"`
+  AvatarURL string `json:"avatar-url,omitempty"`
 }
 
-func NewRegisterParams() (*RegisterParams) {
-  return &RegisterParams{}
+func NewRegisterInfoParams() (*RegisterInfoParams) {
+  return &RegisterInfoParams{}
 }
 
-type RegisterResponse struct {
+type RegisterInfoResponse struct {
   ID int64
   Username string
   RegisterTime int64
@@ -40,15 +47,15 @@ type RegisterResponse struct {
   Error *ResponseError
 }
 
-func (c *Client) SendRegister(params *RegisterParams) (*RegisterResponse) {
+func (c *Client) SendRegisterInfo(params *RegisterInfoParams) (*RegisterInfoResponse) {
   params.AppID = c.AppID
 
-  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + RegisterRouter).
+  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + RegisterInfoRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
                                        Send(params).
                                        End()
                                    
-  respData := &RegisterResponse{}
+  respData := &RegisterInfoResponse{}
   
   respErr := c.processResponse(resp, errs)
   if respErr != nil {
