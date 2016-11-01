@@ -7,10 +7,12 @@ import (
 	"errors"
   "fmt"
   "math"
+	"net/url"
 	"strconv"
   "time"
 
   "github.com/parnurzeal/gorequest"
+  pcj "github.com/juju/persistent-cookiejar"
 )
 
 const (
@@ -42,20 +44,21 @@ type Client struct {
   AppID int
   JimAppID string
   JimAppSecret string
-  ServerTimestampDiff int64
   RequestTimeout int
+  serverTimestampDiff int64
   requestAgent *gorequest.SuperAgent
+  cookiejar *pcj.Jar
 }
 
 func (c *Client) getJimAppSign() (string) {
-  serverTime := strconv.FormatInt(time.Now().UnixNano() / (1000 * 1000) + c.ServerTimestampDiff, 10)
+  serverTime := strconv.FormatInt(time.Now().UnixNano() / (1000 * 1000) + c.serverTimestampDiff, 10)
   hasher := md5.New()
   hasher.Write([]byte(c.JimAppSecret + serverTime))
 
   return hex.EncodeToString(hasher.Sum(nil)) + "," + serverTime
 }
 
-func NewClient(clusterURL string, appID int, jimAppID string, jimAppSecret string) (*Client, error) {
+func NewClient(clusterURL string, appID int, jimAppID string, jimAppSecret string, cookieFilePath string) (*Client, error) {
   client := &Client {
     ClusterURL: clusterURL,
     AppID: appID,
@@ -85,8 +88,13 @@ func NewClient(clusterURL string, appID int, jimAppID string, jimAppSecret strin
     return client, errors.New(clusterURL + " can't response basic info: " + err.Error())
   }
 
+  if jar, err := pcj.New(&pcj.Options{Filename: cookieFilePath}); err == nil {
+    request.Client.Jar = jar
+    client.cookiejar = jar
+  }
+
   client.requestAgent = request.Set("JIM-APP-ID", jimAppID)
-  client.ServerTimestampDiff = apiResult.Time - time.Now().UnixNano() / (1000 * 1000)
+  client.serverTimestampDiff = apiResult.Time - time.Now().UnixNano() / (1000 * 1000)
 
 	return client, nil
 }
@@ -97,6 +105,18 @@ func (c *Client) getRequestAgent() *gorequest.SuperAgent {
   }
 
   return c.requestAgent.Timeout(time.Duration(math.MaxUint32) * time.Millisecond)
+}
+
+func (c *Client) HasValidSession() bool {
+  domain, _ := url.Parse(c.ClusterURL)
+  
+  for _, cookie := range c.cookiejar.Cookies(domain) {
+    if cookie.Name == "ring-session" {
+      return true
+    }    
+  }
+
+  return false
 }
 
 type ResponseError struct {

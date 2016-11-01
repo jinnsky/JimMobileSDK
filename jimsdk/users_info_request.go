@@ -27,7 +27,13 @@ type UserInfoResponse struct {
 }
 
 func (c *Client) SendUserInfo(userID int, subUserID int) (*UserInfoResponse) {
-  payload := UserInfoParams{ UserID: userID }
+  var payload UserInfoParams
+
+  if subUserID > 0 {
+    payload = UserInfoParams{ UserID: userID, SubUserID: subUserID }
+  } else {
+    payload = UserInfoParams{ UserID: userID }
+  }
 
   if (subUserID > 0) {
     payload.SubUserID = subUserID

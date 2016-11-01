@@ -2,6 +2,7 @@ package jimsdk
 
 import (
   "github.com/antonholmquist/jason"
+	"net/url"
 )
 
 type LoginParams struct {
@@ -54,7 +55,7 @@ func (c *Client) SendLogin(params *LoginParams) (*LoginResponse) {
     respData.Error = respErr
     return respData
   }
-                                   
+
   v, _ := jason.NewObjectFromReader(resp.Body)
   
   id, _ := v.GetInt64("id")
@@ -84,6 +85,17 @@ func (c *Client) SendLogin(params *LoginParams) (*LoginResponse) {
   respData.InfoHeight = int(height)
   respData.InfoWeight = int(weight)
   respData.InfoGender = int(gender)
-  
+
+  domain, _ := url.Parse(c.ClusterURL)
+  cookies := c.requestAgent.Client.Jar.Cookies(domain)
+  for _, cookie := range cookies {
+    if cookie.Name == "ring-session" {
+      cookie.MaxAge = 365 * 24 * 60 * 60
+    }
+  }
+
+  c.cookiejar.SetCookies(domain, cookies)
+  c.cookiejar.Save()
+
   return respData
 }

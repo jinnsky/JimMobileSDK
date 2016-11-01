@@ -25,7 +25,7 @@ func (t *tempListener) OnFailure(respErr *jimsdk.ResponseError) {
 }
 
 func main() {
-	client, error := jimsdk.NewClient(clusterURL, appID, jimAppID, jimAppSecret)
+	client, error := jimsdk.NewClient(clusterURL, appID, jimAppID, jimAppSecret, ".go-cookies")
 
 	if error != nil {
 		fmt.Println(error)
@@ -55,17 +55,31 @@ func main() {
 		}
 	}
 
-	loginParams := &jimsdk.LoginParams{ Username: "testerv2",
-																			Password: "654321" }
-	loginResponseData := client.SendLogin(loginParams)
+	if client.HasValidSession() {
+		infoResponseData := client.SendUserInfo(407322, 0)
+		
+		if infoResponseData != nil {
+			if jimsdk.CatchResponseError(infoResponseData.Error) {
+				fmt.Println(infoResponseData.Error.Key, infoResponseData.Error.Message)
+			} else {
+				fmt.Println("Username: ", infoResponseData.Username)
+				fmt.Println("UserID: ", infoResponseData.ID)
+				fmt.Println("Register time: ", infoResponseData.RegisterTime)
+			}
+		}
+	} else {
+		loginParams := &jimsdk.LoginParams{ Username: "testerv2",
+																				Password: "654321" }
+		loginResponseData := client.SendLogin(loginParams)
 
-	if loginResponseData != nil {
-		if jimsdk.CatchResponseError(loginResponseData.Error) {
-			fmt.Println(loginResponseData.Error.Key, loginResponseData.Error.Message)
-		} else {
-			fmt.Println("Username: ", loginResponseData.Username)	
-			fmt.Println("UserID: ", loginResponseData.ID)
-			fmt.Println("Register time: ", loginResponseData.RegisterTime)
+		if loginResponseData != nil {
+			if jimsdk.CatchResponseError(loginResponseData.Error) {
+				fmt.Println(loginResponseData.Error.Key, loginResponseData.Error.Message)
+			} else {
+				fmt.Println("Username: ", loginResponseData.Username)	
+				fmt.Println("UserID: ", loginResponseData.ID)
+				fmt.Println("Register time: ", loginResponseData.RegisterTime)
+			}
 		}
 	}
 
