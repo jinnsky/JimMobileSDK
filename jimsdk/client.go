@@ -12,7 +12,7 @@ import (
   "time"
 
   "github.com/parnurzeal/gorequest"
-  pcj "github.com/juju/persistent-cookiejar"
+  "github.com/juju/persistent-cookiejar"
 )
 
 const (
@@ -47,7 +47,7 @@ type Client struct {
   RequestTimeout int
   serverTimestampDiff int64
   requestAgent *gorequest.SuperAgent
-  cookiejar *pcj.Jar
+  cookiejar *cookiejar.Jar
 }
 
 func (c *Client) getJimAppSign() (string) {
@@ -64,6 +64,7 @@ func NewClient(clusterURL string, appID int, jimAppID string, jimAppSecret strin
     AppID: appID,
     JimAppID: jimAppID,
     JimAppSecret: jimAppSecret,
+    RequestTimeout: 3 * 60 * 1000,
   }
 
   if clusterURL == "" {
@@ -88,9 +89,11 @@ func NewClient(clusterURL string, appID int, jimAppID string, jimAppSecret strin
     return client, errors.New(clusterURL + " can't response basic info: " + err.Error())
   }
 
-  if jar, err := pcj.New(&pcj.Options{Filename: cookieFilePath}); err == nil {
-    request.Client.Jar = jar
-    client.cookiejar = jar
+  if len(cookieFilePath) > 0 {
+    if jar, err := cookiejar.New(&cookiejar.Options{Filename: cookieFilePath}); err == nil {
+      request.Client.Jar = jar
+      client.cookiejar = jar
+    }
   }
 
   client.requestAgent = request.Set("JIM-APP-ID", jimAppID)

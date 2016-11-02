@@ -5,7 +5,7 @@ import (
 )
 
 type UserInfoParams struct {
-  UserID int `json:"users-id"`
+  UserID int `json:"users-id,omitempty"`
   SubUserID int `json:"sub-users-id,omitempty"`
 }
 
@@ -27,12 +27,14 @@ type UserInfoResponse struct {
 }
 
 func (c *Client) SendUserInfo(userID int, subUserID int) (*UserInfoResponse) {
-  var payload UserInfoParams
+  var payload = UserInfoParams{}
+
+  if userID > 0 {
+    payload.UserID = userID
+  }
 
   if subUserID > 0 {
-    payload = UserInfoParams{ UserID: userID, SubUserID: subUserID }
-  } else {
-    payload = UserInfoParams{ UserID: userID }
+    payload.SubUserID = subUserID
   }
 
   if (subUserID > 0) {

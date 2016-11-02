@@ -86,16 +86,18 @@ func (c *Client) SendLogin(params *LoginParams) (*LoginResponse) {
   respData.InfoWeight = int(weight)
   respData.InfoGender = int(gender)
 
-  domain, _ := url.Parse(c.ClusterURL)
-  cookies := c.requestAgent.Client.Jar.Cookies(domain)
-  for _, cookie := range cookies {
-    if cookie.Name == "ring-session" {
-      cookie.MaxAge = 365 * 24 * 60 * 60
+  if c.cookiejar != nil {
+    domain, _ := url.Parse(c.ClusterURL)
+    cookies := c.requestAgent.Client.Jar.Cookies(domain)
+    for _, cookie := range cookies {
+      if cookie.Name == "ring-session" {
+        cookie.MaxAge = 365 * 24 * 60 * 60
+      }
     }
-  }
 
-  c.cookiejar.SetCookies(domain, cookies)
-  c.cookiejar.Save()
+    c.cookiejar.SetCookies(domain, cookies)
+    c.cookiejar.Save()
+  }
 
   return respData
 }
