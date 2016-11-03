@@ -2,6 +2,7 @@ package jimsdk
 
 import (
   "github.com/antonholmquist/jason"
+	"github.com/parnurzeal/gorequest"
 )
 
 type UserInfoParams struct {
@@ -24,6 +25,11 @@ type UserInfoResponse struct {
   InfoWeight int
   InfoGender int
   Error *ResponseError
+}
+
+type UserInfoResponseListener interface {
+  OnSuccess(respData *UserInfoResponse)
+  OnFailure(respErr *ResponseError)
 }
 
 func (c *Client) SendUserInfo(userID int, subUserID int) (*UserInfoResponse) {
@@ -54,35 +60,62 @@ func (c *Client) SendUserInfo(userID int, subUserID int) (*UserInfoResponse) {
     return respData
   }
 
-  v, _ := jason.NewObjectFromReader(resp.Body)
-  
-  id, _ := v.GetInt64("id")
-  username, _ := v.GetString("username")
-  registerTime, _ := v.GetInt64("register-time")
-  emailChecked, _ := v.GetBoolean("email", "checked")
-  email, _ := v.GetString("email", "email")
-  phoneChecked, _ := v.GetBoolean("phone", "checked")
-  phone, _ := v.GetString("phone", "phone")
-  birthday, _ := v.GetString("info", "birthday")
-  caseHistory, _ := v.GetString("info", "case-history")
-  nickname, _ := v.GetString("info", "nickname")
-  height, _ := v.GetInt64("info", "height")
-  weight, _ := v.GetInt64("info", "weight")
-  gender, _ := v.GetInt64("info", "sex")
-  
-  respData.ID = id
-  respData.Username = username
-  respData.RegisterTime = registerTime
-  respData.Email = email
-  respData.EmailChecked = emailChecked
-  respData.Phone = phone
-  respData.PhoneChecked = phoneChecked
-  respData.InfoBirthday = birthday
-  respData.InfoCaseHistory = caseHistory
-  respData.InfoNickname = nickname
-  respData.InfoHeight = int(height)
-  respData.InfoWeight = int(weight)
-  respData.InfoGender = int(gender)
+  obj, _ := jason.NewObjectFromReader(resp.Body)
+
+  respData.ID, respData.Username, respData.RegisterTime, 
+  respData.Email, respData.EmailChecked, respData.Phone, respData.PhoneChecked, 
+  respData.InfoBirthday, respData.InfoCaseHistory, respData.InfoNickname, 
+  respData.InfoHeight, respData.InfoWeight, respData.InfoGender = c.decodeUserInfoObject(obj)
 
   return respData
+}
+
+func (c *Client) SendUserInfoAsync(userID int, subUserID int, listener UserInfoResponseListener) {
+  callback := func (resp gorequest.Response, body string, errs []error) {
+    if listener != nil {
+      respErr := c.processResponse(resp, errs)
+
+      if respErr != nil {
+        listener.OnFailure(respErr)
+      } else {
+        respData := &UserInfoResponse{}
+
+        obj, _ := jason.NewObjectFromReader(resp.Body)
+
+        respData.ID, respData.Username, respData.RegisterTime, 
+        respData.Email, respData.EmailChecked, respData.Phone, respData.PhoneChecked, 
+        respData.InfoBirthday, respData.InfoCaseHistory, respData.InfoNickname, 
+        respData.InfoHeight, respData.InfoWeight, respData.InfoGender = c.decodeUserInfoObject(obj)
+
+        listener.OnSuccess(respData)
+      }
+    }
+  }
+
+  var payload = UserInfoParams{}
+
+  if userID > 0 {
+    payload.UserID = userID
+  }
+
+  if subUserID > 0 {
+    payload.SubUserID = subUserID
+  }
+
+  if (subUserID > 0) {
+    payload.SubUserID = subUserID
+  }
+
+  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + UserInfoRouter).
+                                       Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Send(payload).
+                                       End(callback)
+
+  if listener != nil {
+    respErr := c.processResponse(resp, errs)
+
+    if respErr != nil {
+      listener.OnFailure(respErr)
+    }
+  }
 }

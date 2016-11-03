@@ -11,8 +11,9 @@ import (
 	"strconv"
   "time"
 
-  "github.com/parnurzeal/gorequest"
+	"github.com/antonholmquist/jason"
   "github.com/juju/persistent-cookiejar"
+  "github.com/parnurzeal/gorequest"
 )
 
 const (
@@ -108,6 +109,56 @@ func (c *Client) getRequestAgent() *gorequest.SuperAgent {
   }
 
   return c.requestAgent.Timeout(time.Duration(math.MaxUint32) * time.Millisecond)
+}
+
+func (c *Client) saveCookieJar() {
+  if c.cookiejar != nil {
+    domain, _ := url.Parse(c.ClusterURL)
+    cookies := c.requestAgent.Client.Jar.Cookies(domain)
+    for _, cookie := range cookies {
+      if cookie.Name == "ring-session" {
+        cookie.MaxAge = 365 * 24 * 60 * 60
+      }
+    }
+
+    c.cookiejar.SetCookies(domain, cookies)
+    c.cookiejar.Save()
+  }
+}
+
+func (c *Client) decodeUserInfoObject(obj *jason.Object) (id int64, 
+                                                          username string, 
+                                                          registerTime int64, 
+                                                          email string, 
+                                                          emailChecked bool,
+                                                          phone string,
+                                                          phoneChecked bool,
+                                                          birthday string,
+                                                          caseHistory string,
+                                                          nickname string,
+                                                          height int,
+                                                          weight int,
+                                                          gender int) {
+  id, _ = obj.GetInt64("id")
+  username, _ = obj.GetString("username")
+  registerTime, _ = obj.GetInt64("register-time")
+  emailChecked, _ = obj.GetBoolean("email", "checked")
+  email, _ = obj.GetString("email", "email")
+  phoneChecked, _ = obj.GetBoolean("phone", "checked")
+  phone, _ = obj.GetString("phone", "phone")
+  birthday, _ = obj.GetString("info", "birthday")
+  caseHistory, _ = obj.GetString("info", "case-history")
+  nickname, _ = obj.GetString("info", "nickname")
+
+  height64, _ := obj.GetInt64("info", "height")
+  weight64, _ := obj.GetInt64("info", "weight")
+  gender64, _ := obj.GetInt64("info", "sex")
+
+  height = int(height64)
+  weight = int(weight64)
+  gender = int(gender64)
+
+  return
 }
 
 func (c *Client) HasValidSession() bool {

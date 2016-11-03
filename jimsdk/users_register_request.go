@@ -2,6 +2,7 @@ package jimsdk
 
 import (
   "github.com/antonholmquist/jason"
+	"github.com/parnurzeal/gorequest"
 )
 
 type RegisterParams struct {
@@ -40,6 +41,11 @@ type RegisterResponse struct {
   Error *ResponseError
 }
 
+type RegisterResponseListener interface {
+  OnSuccess(respData *RegisterResponse)
+  OnFailure(respErr *ResponseError)
+}
+
 func (c *Client) SendRegister(params *RegisterParams) (*RegisterResponse) {
   params.AppID = c.AppID
 
@@ -56,35 +62,54 @@ func (c *Client) SendRegister(params *RegisterParams) (*RegisterResponse) {
     return respData
   }
                                    
-  v, _ := jason.NewObjectFromReader(resp.Body)
-  
-  id, _ := v.GetInt64("id")
-  username, _ := v.GetString("username")
-  registerTime, _ := v.GetInt64("register-time")
-  emailChecked, _ := v.GetBoolean("email", "checked")
-  email, _ := v.GetString("email", "email")
-  phoneChecked, _ := v.GetBoolean("phone", "checked")
-  phone, _ := v.GetString("phone", "phone")
-  birthday, _ := v.GetString("info", "birthday")
-  caseHistory, _ := v.GetString("info", "case-history")
-  nickname, _ := v.GetString("info", "nickname")
-  height, _ := v.GetInt64("info", "height")
-  weight, _ := v.GetInt64("info", "weight")
-  gender, _ := v.GetInt64("info", "sex")
-  
-  respData.ID = id
-  respData.Username = username
-  respData.RegisterTime = registerTime
-  respData.Email = email
-  respData.EmailChecked = emailChecked
-  respData.Phone = phone
-  respData.PhoneChecked = phoneChecked
-  respData.InfoBirthday = birthday
-  respData.InfoCaseHistory = caseHistory
-  respData.InfoNickname = nickname
-  respData.InfoHeight = int(height)
-  respData.InfoWeight = int(weight)
-  respData.InfoGender = int(gender)
+  obj, _ := jason.NewObjectFromReader(resp.Body)
+
+  respData.ID, respData.Username, respData.RegisterTime, 
+  respData.Email, respData.EmailChecked, respData.Phone, respData.PhoneChecked, 
+  respData.InfoBirthday, respData.InfoCaseHistory, respData.InfoNickname, 
+  respData.InfoHeight, respData.InfoWeight, respData.InfoGender = c.decodeUserInfoObject(obj)
+
+  c.saveCookieJar()
   
   return respData
+}
+
+func (c *Client) SendRegisterAsync(params *RegisterParams, listener RegisterResponseListener) {
+  callback := func (resp gorequest.Response, body string, errs []error) {
+    if listener != nil {
+      respErr := c.processResponse(resp, errs)
+
+      if respErr != nil {
+        listener.OnFailure(respErr)
+      } else {
+        respData := &RegisterResponse{}
+
+        obj, _ := jason.NewObjectFromReader(resp.Body)
+
+        respData.ID, respData.Username, respData.RegisterTime, 
+        respData.Email, respData.EmailChecked, respData.Phone, respData.PhoneChecked, 
+        respData.InfoBirthday, respData.InfoCaseHistory, respData.InfoNickname, 
+        respData.InfoHeight, respData.InfoWeight, respData.InfoGender = c.decodeUserInfoObject(obj)
+
+        c.saveCookieJar()
+
+        listener.OnSuccess(respData)
+      }
+    }
+  }
+
+  params.AppID = c.AppID
+
+  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + RegisterRouter).
+                                       Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Send(params).
+                                       End(callback)
+
+  if listener != nil {
+    respErr := c.processResponse(resp, errs)
+
+    if respErr != nil {
+      listener.OnFailure(respErr)
+    }
+  }
 }
