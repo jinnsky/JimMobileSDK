@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
   "JimMobileSDK/jimsdk"
+	"io/ioutil"
+	"encoding/base64"
 )
 
 const clusterURL = "http://api2.jimyun.com"
@@ -22,6 +24,15 @@ func (t *tempListener) OnSuccess(respData *jimsdk.VerifyEmailResponse) {
 
 func (t *tempListener) OnFailure(respErr *jimsdk.ResponseError) {
 	fmt.Println(respErr.Key, respErr.Message)
+}
+
+func EncodeJPEGImageFile(path string) (string, error) {
+	buff, err := ioutil.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+
+	return "data:image/jpeg;base64," + base64.StdEncoding.EncodeToString(buff), nil
 }
 
 func main() {
@@ -100,6 +111,9 @@ func main() {
 	}
 
 	uploadAvatarResponseData := client.SendUploadAvatar("avatar.png")
+
+	// encodedStr, _ := EncodeJPGImageFile("avatar.jpg")
+	// uploadAvatarResponseData := client.SendUploadAvatarBase64(encodedStr)
 
 	if uploadAvatarResponseData != nil {
 		if jimsdk.CatchResponseError(uploadAvatarResponseData.Error) {

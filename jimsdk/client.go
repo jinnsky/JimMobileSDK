@@ -35,6 +35,7 @@ const (
   UpdateBindPhoneRouter = "/v1/users/send-bind-phone-sms"
   UpdateUserRouter = "/v1/users/update"
   UploadAvatarRouter = "/v1/avatar/upload"
+  UploadAvatarBase64Router = "/v1/avatar/upload-base64"
   VerifyEmailRouter = "/v1/users/send-verify-email"
   VerifySmsRouter = "/v1/users/send-verify-sms"
   WeiboUserRouter = "/v1/users/is-has-sina-weibo-user"
