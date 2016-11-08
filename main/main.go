@@ -56,7 +56,7 @@ func main() {
 	}
 
 	if client.HasValidSession() {
-		infoResponseData := client.SendUserInfo(407322, 0)
+		infoResponseData := client.SendUserInfo(0, 0)
 		
 		if infoResponseData != nil {
 			if jimsdk.CatchResponseError(infoResponseData.Error) {
@@ -94,6 +94,17 @@ func main() {
 			} else {
 				fmt.Println("Changed password - Failed.")
 			}
+		}
+	}
+
+	uploadAvatarResponseData := client.SendUploadAvatar("avatar.png")
+
+	if uploadAvatarResponseData != nil {
+		if jimsdk.CatchResponseError(uploadAvatarResponseData.Error) {
+			fmt.Println(uploadAvatarResponseData.Error.Key, uploadAvatarResponseData.Error.Message)
+		} else {
+			fmt.Println("Avatar URL: ", uploadAvatarResponseData.URL)
+			fmt.Println("Avatar message: ", uploadAvatarResponseData.Message)
 		}
 	}
 }
