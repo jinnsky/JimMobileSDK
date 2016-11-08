@@ -127,9 +127,28 @@ func (c *Client) saveCookieJar() {
   }
 }
 
+type UserInfoResponse struct {
+  ID int64
+  Username string
+  RegisterTime int64
+  AvatarURL string
+  Email string
+  EmailChecked bool
+  Phone string
+  PhoneChecked bool
+  InfoBirthday string
+  InfoCaseHistory string
+  InfoNickname string
+  InfoHeight int
+  InfoWeight int
+  InfoGender int
+  Error *ResponseError
+}
+
 func (c *Client) decodeUserInfoObject(obj *jason.Object) (id int64, 
                                                           username string, 
                                                           registerTime int64, 
+                                                          avatarURL string,
                                                           email string, 
                                                           emailChecked bool,
                                                           phone string,
@@ -143,6 +162,7 @@ func (c *Client) decodeUserInfoObject(obj *jason.Object) (id int64,
   id, _ = obj.GetInt64("id")
   username, _ = obj.GetString("username")
   registerTime, _ = obj.GetInt64("register-time")
+  avatarURL, _ = obj.GetString("head-pic-url")
   emailChecked, _ = obj.GetBoolean("email", "checked")
   email, _ = obj.GetString("email", "email")
   phoneChecked, _ = obj.GetBoolean("phone", "checked")

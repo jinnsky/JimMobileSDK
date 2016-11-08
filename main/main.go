@@ -65,6 +65,7 @@ func main() {
 				fmt.Println("Username: ", infoResponseData.Username)
 				fmt.Println("UserID: ", infoResponseData.ID)
 				fmt.Println("Register time: ", infoResponseData.RegisterTime)
+				fmt.Println("Avatar URL: ", infoResponseData.AvatarURL)
 			}
 		}
 	} else {
@@ -79,6 +80,7 @@ func main() {
 				fmt.Println("Username: ", loginResponseData.Username)	
 				fmt.Println("UserID: ", loginResponseData.ID)
 				fmt.Println("Register time: ", loginResponseData.RegisterTime)
+				fmt.Println("Avatar URL: ", loginResponseData.AvatarURL)
 			}
 		}
 	}

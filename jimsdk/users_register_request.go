@@ -24,29 +24,12 @@ func NewRegisterParams() (*RegisterParams) {
   return &RegisterParams{}
 }
 
-type RegisterResponse struct {
-  ID int64
-  Username string
-  RegisterTime int64
-  Email string
-  EmailChecked bool
-  Phone string
-  PhoneChecked bool
-  InfoBirthday string
-  InfoCaseHistory string
-  InfoNickname string
-  InfoHeight int
-  InfoWeight int
-  InfoGender int
-  Error *ResponseError
-}
-
 type RegisterResponseListener interface {
-  OnSuccess(respData *RegisterResponse)
+  OnSuccess(respData *UserInfoResponse)
   OnFailure(respErr *ResponseError)
 }
 
-func (c *Client) SendRegister(params *RegisterParams) (*RegisterResponse) {
+func (c *Client) SendRegister(params *RegisterParams) (*UserInfoResponse) {
   params.AppID = c.AppID
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + RegisterRouter).
@@ -54,7 +37,7 @@ func (c *Client) SendRegister(params *RegisterParams) (*RegisterResponse) {
                                        Send(params).
                                        End()
                                    
-  respData := &RegisterResponse{}
+  respData := &UserInfoResponse{}
   
   respErr := c.processResponse(resp, errs)
   if respErr != nil {
@@ -64,7 +47,7 @@ func (c *Client) SendRegister(params *RegisterParams) (*RegisterResponse) {
                                    
   obj, _ := jason.NewObjectFromReader(resp.Body)
 
-  respData.ID, respData.Username, respData.RegisterTime, 
+  respData.ID, respData.Username, respData.RegisterTime, respData.AvatarURL,
   respData.Email, respData.EmailChecked, respData.Phone, respData.PhoneChecked, 
   respData.InfoBirthday, respData.InfoCaseHistory, respData.InfoNickname, 
   respData.InfoHeight, respData.InfoWeight, respData.InfoGender = c.decodeUserInfoObject(obj)
@@ -82,11 +65,11 @@ func (c *Client) SendRegisterAsync(params *RegisterParams, listener RegisterResp
       if respErr != nil {
         listener.OnFailure(respErr)
       } else {
-        respData := &RegisterResponse{}
+        respData := &UserInfoResponse{}
 
         obj, _ := jason.NewObjectFromReader(resp.Body)
 
-        respData.ID, respData.Username, respData.RegisterTime, 
+        respData.ID, respData.Username, respData.RegisterTime, respData.AvatarURL,
         respData.Email, respData.EmailChecked, respData.Phone, respData.PhoneChecked, 
         respData.InfoBirthday, respData.InfoCaseHistory, respData.InfoNickname, 
         respData.InfoHeight, respData.InfoWeight, respData.InfoGender = c.decodeUserInfoObject(obj)

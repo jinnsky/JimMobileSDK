@@ -23,29 +23,12 @@ func NewLoginParams() (*LoginParams) {
   return &LoginParams{}
 }
 
-type LoginResponse struct {
-  ID int64
-  Username string
-  RegisterTime int64
-  Email string
-  EmailChecked bool
-  Phone string
-  PhoneChecked bool
-  InfoBirthday string
-  InfoCaseHistory string
-  InfoNickname string
-  InfoHeight int
-  InfoWeight int
-  InfoGender int
-  Error *ResponseError
-}
-
 type LoginResponseListener interface {
-  OnSuccess(respData *LoginResponse)
+  OnSuccess(respData *UserInfoResponse)
   OnFailure(respErr *ResponseError)
 }
 
-func (c *Client) SendLogin(params *LoginParams) (*LoginResponse) {
+func (c *Client) SendLogin(params *LoginParams) (*UserInfoResponse) {
   params.AppID = c.AppID
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + LoginRouter).
@@ -53,7 +36,7 @@ func (c *Client) SendLogin(params *LoginParams) (*LoginResponse) {
                                        Send(params).
                                        End()
                                    
-  respData := &LoginResponse{}
+  respData := &UserInfoResponse{}
   
   respErr := c.processResponse(resp, errs)
   if respErr != nil {
@@ -63,7 +46,7 @@ func (c *Client) SendLogin(params *LoginParams) (*LoginResponse) {
 
   obj, _ := jason.NewObjectFromReader(resp.Body)
 
-  respData.ID, respData.Username, respData.RegisterTime, 
+  respData.ID, respData.Username, respData.RegisterTime, respData.AvatarURL,
   respData.Email, respData.EmailChecked, respData.Phone, respData.PhoneChecked, 
   respData.InfoBirthday, respData.InfoCaseHistory, respData.InfoNickname, 
   respData.InfoHeight, respData.InfoWeight, respData.InfoGender = c.decodeUserInfoObject(obj)
@@ -81,11 +64,11 @@ func (c *Client)SendLoginAsync(params *LoginParams, listener LoginResponseListen
       if respErr != nil {
         listener.OnFailure(respErr)
       } else {
-        respData := &LoginResponse{}
+        respData := &UserInfoResponse{}
 
         obj, _ := jason.NewObjectFromReader(resp.Body)
 
-        respData.ID, respData.Username, respData.RegisterTime, 
+        respData.ID, respData.Username, respData.RegisterTime, respData.AvatarURL,
         respData.Email, respData.EmailChecked, respData.Phone, respData.PhoneChecked, 
         respData.InfoBirthday, respData.InfoCaseHistory, respData.InfoNickname, 
         respData.InfoHeight, respData.InfoWeight, respData.InfoGender = c.decodeUserInfoObject(obj)

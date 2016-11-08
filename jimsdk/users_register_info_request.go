@@ -30,24 +30,7 @@ func NewRegisterInfoParams() (*RegisterInfoParams) {
   return &RegisterInfoParams{}
 }
 
-type RegisterInfoResponse struct {
-  ID int64
-  Username string
-  RegisterTime int64
-  Email string
-  EmailChecked bool
-  Phone string
-  PhoneChecked bool
-  InfoBirthday string
-  InfoCaseHistory string
-  InfoNickname string
-  InfoHeight int
-  InfoWeight int
-  InfoGender int
-  Error *ResponseError
-}
-
-func (c *Client) SendRegisterInfo(params *RegisterInfoParams) (*RegisterInfoResponse) {
+func (c *Client) SendRegisterInfo(params *RegisterInfoParams) (*UserInfoResponse) {
   params.AppID = c.AppID
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + RegisterInfoRouter).
@@ -55,7 +38,7 @@ func (c *Client) SendRegisterInfo(params *RegisterInfoParams) (*RegisterInfoResp
                                        Send(params).
                                        End()
                                    
-  respData := &RegisterInfoResponse{}
+  respData := &UserInfoResponse{}
   
   respErr := c.processResponse(resp, errs)
   if respErr != nil {
@@ -65,7 +48,7 @@ func (c *Client) SendRegisterInfo(params *RegisterInfoParams) (*RegisterInfoResp
                                    
   obj, _ := jason.NewObjectFromReader(resp.Body)
 
-  respData.ID, respData.Username, respData.RegisterTime, 
+  respData.ID, respData.Username, respData.RegisterTime, respData.AvatarURL,
   respData.Email, respData.EmailChecked, respData.Phone, respData.PhoneChecked, 
   respData.InfoBirthday, respData.InfoCaseHistory, respData.InfoNickname, 
   respData.InfoHeight, respData.InfoWeight, respData.InfoGender = c.decodeUserInfoObject(obj)

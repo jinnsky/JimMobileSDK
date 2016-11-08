@@ -21,13 +21,10 @@
 @class GoJimsdkLinkedInUserParams;
 @class GoJimsdkLinkedInUserResponse;
 @class GoJimsdkLoginParams;
-@class GoJimsdkLoginResponse;
 @class GoJimsdkQqUserParams;
 @class GoJimsdkQqUserResponse;
 @class GoJimsdkRegisterInfoParams;
-@class GoJimsdkRegisterInfoResponse;
 @class GoJimsdkRegisterParams;
-@class GoJimsdkRegisterResponse;
 @class GoJimsdkResetPasswordEmailParams;
 @class GoJimsdkResetPasswordEmailResponse;
 @class GoJimsdkResetPasswordParams;
@@ -43,6 +40,7 @@
 @class GoJimsdkUpdateBindPhoneResponse;
 @class GoJimsdkUpdateUserParams;
 @class GoJimsdkUpdateUserResponse;
+@class GoJimsdkUploadAvatarResponse;
 @class GoJimsdkUserInfoParams;
 @class GoJimsdkUserInfoResponse;
 @class GoJimsdkVerifyEmailParams;
@@ -53,6 +51,12 @@
 @class GoJimsdkWeiboUserResponse;
 @class GoJimsdkWeixinUserResponse;
 @class GoJimsdkWexinUserParams;
+@protocol GoJimsdkLoginResponseListener;
+@class GoJimsdkLoginResponseListener;
+@protocol GoJimsdkRegisterResponseListener;
+@class GoJimsdkRegisterResponseListener;
+@protocol GoJimsdkUserInfoResponseListener;
+@class GoJimsdkUserInfoResponseListener;
 @protocol GoJimsdkVerifyEmailResponseListener;
 @class GoJimsdkVerifyEmailResponseListener;
 
@@ -147,10 +151,12 @@
 - (GoJimsdkChangePasswordResponse*)sendChangePassword:(NSString*)oldPwd newPwd:(NSString*)newPwd;
 - (GoJimsdkFacebookUserResponse*)sendFacebookUser:(NSString*)accessToken;
 - (GoJimsdkLinkedInUserResponse*)sendLinkedInUser:(NSString*)accessToken;
-- (GoJimsdkLoginResponse*)sendLogin:(GoJimsdkLoginParams*)params;
+- (GoJimsdkUserInfoResponse*)sendLogin:(GoJimsdkLoginParams*)params;
+- (void)sendLoginAsync:(GoJimsdkLoginParams*)params listener:(id<GoJimsdkLoginResponseListener>)listener;
 - (GoJimsdkQqUserResponse*)sendQqUser:(NSString*)openID;
-- (GoJimsdkRegisterResponse*)sendRegister:(GoJimsdkRegisterParams*)params;
-- (GoJimsdkRegisterInfoResponse*)sendRegisterInfo:(GoJimsdkRegisterInfoParams*)params;
+- (GoJimsdkUserInfoResponse*)sendRegister:(GoJimsdkRegisterParams*)params;
+- (void)sendRegisterAsync:(GoJimsdkRegisterParams*)params listener:(id<GoJimsdkRegisterResponseListener>)listener;
+- (GoJimsdkUserInfoResponse*)sendRegisterInfo:(GoJimsdkRegisterInfoParams*)params;
 - (GoJimsdkResetPasswordResponse*)sendResetPassword:(GoJimsdkResetPasswordParams*)params;
 - (GoJimsdkResetPasswordEmailResponse*)sendResetPasswordEmail:(NSString*)email;
 - (GoJimsdkResetPasswordSmsResponse*)sendResetPasswordSms:(NSString*)phone;
@@ -158,7 +164,9 @@
 - (GoJimsdkUpdateBindEmailResponse*)sendUpdateBindEmail:(long)userID email:(NSString*)email;
 - (GoJimsdkUpdateBindPhoneResponse*)sendUpdateBindPhone:(long)userID phone:(NSString*)phone;
 - (GoJimsdkUpdateUserResponse*)sendUpdateUser:(GoJimsdkUpdateUserParams*)params;
+- (GoJimsdkUploadAvatarResponse*)sendUploadAvatar:(NSString*)file;
 - (GoJimsdkUserInfoResponse*)sendUserInfo:(long)userID subUserID:(long)subUserID;
+- (void)sendUserInfoAsync:(long)userID subUserID:(long)subUserID listener:(id<GoJimsdkUserInfoResponseListener>)listener;
 - (GoJimsdkVerifyEmailResponse*)sendVerifyEmail:(NSString*)email;
 - (void)sendVerifyEmailAsync:(NSString*)email listener:(id<GoJimsdkVerifyEmailResponseListener>)listener;
 - (GoJimsdkVerifySmsResponse*)sendVerifySms:(NSString*)phone;
@@ -255,41 +263,6 @@
 - (void)setLinkedInID:(NSString*)v;
 @end
 
-@interface GoJimsdkLoginResponse : NSObject {
-}
-@property(strong, readonly) id _ref;
-
-- (id)initWithRef:(id)ref;
-- (int64_t)id_;
-- (void)setID:(int64_t)v;
-- (NSString*)username;
-- (void)setUsername:(NSString*)v;
-- (int64_t)registerTime;
-- (void)setRegisterTime:(int64_t)v;
-- (NSString*)email;
-- (void)setEmail:(NSString*)v;
-- (BOOL)emailChecked;
-- (void)setEmailChecked:(BOOL)v;
-- (NSString*)phone;
-- (void)setPhone:(NSString*)v;
-- (BOOL)phoneChecked;
-- (void)setPhoneChecked:(BOOL)v;
-- (NSString*)infoBirthday;
-- (void)setInfoBirthday:(NSString*)v;
-- (NSString*)infoCaseHistory;
-- (void)setInfoCaseHistory:(NSString*)v;
-- (NSString*)infoNickname;
-- (void)setInfoNickname:(NSString*)v;
-- (long)infoHeight;
-- (void)setInfoHeight:(long)v;
-- (long)infoWeight;
-- (void)setInfoWeight:(long)v;
-- (long)infoGender;
-- (void)setInfoGender:(long)v;
-- (GoJimsdkResponseError*)error;
-- (void)setError:(GoJimsdkResponseError*)v;
-@end
-
 @interface GoJimsdkQqUserParams : NSObject {
 }
 @property(strong, readonly) id _ref;
@@ -357,41 +330,6 @@
 - (void)setAvatarURL:(NSString*)v;
 @end
 
-@interface GoJimsdkRegisterInfoResponse : NSObject {
-}
-@property(strong, readonly) id _ref;
-
-- (id)initWithRef:(id)ref;
-- (int64_t)id_;
-- (void)setID:(int64_t)v;
-- (NSString*)username;
-- (void)setUsername:(NSString*)v;
-- (int64_t)registerTime;
-- (void)setRegisterTime:(int64_t)v;
-- (NSString*)email;
-- (void)setEmail:(NSString*)v;
-- (BOOL)emailChecked;
-- (void)setEmailChecked:(BOOL)v;
-- (NSString*)phone;
-- (void)setPhone:(NSString*)v;
-- (BOOL)phoneChecked;
-- (void)setPhoneChecked:(BOOL)v;
-- (NSString*)infoBirthday;
-- (void)setInfoBirthday:(NSString*)v;
-- (NSString*)infoCaseHistory;
-- (void)setInfoCaseHistory:(NSString*)v;
-- (NSString*)infoNickname;
-- (void)setInfoNickname:(NSString*)v;
-- (long)infoHeight;
-- (void)setInfoHeight:(long)v;
-- (long)infoWeight;
-- (void)setInfoWeight:(long)v;
-- (long)infoGender;
-- (void)setInfoGender:(long)v;
-- (GoJimsdkResponseError*)error;
-- (void)setError:(GoJimsdkResponseError*)v;
-@end
-
 @interface GoJimsdkRegisterParams : NSObject {
 }
 @property(strong, readonly) id _ref;
@@ -421,41 +359,6 @@
 - (void)setLinkedInID:(NSString*)v;
 - (NSString*)verificationCode;
 - (void)setVerificationCode:(NSString*)v;
-@end
-
-@interface GoJimsdkRegisterResponse : NSObject {
-}
-@property(strong, readonly) id _ref;
-
-- (id)initWithRef:(id)ref;
-- (int64_t)id_;
-- (void)setID:(int64_t)v;
-- (NSString*)username;
-- (void)setUsername:(NSString*)v;
-- (int64_t)registerTime;
-- (void)setRegisterTime:(int64_t)v;
-- (NSString*)email;
-- (void)setEmail:(NSString*)v;
-- (BOOL)emailChecked;
-- (void)setEmailChecked:(BOOL)v;
-- (NSString*)phone;
-- (void)setPhone:(NSString*)v;
-- (BOOL)phoneChecked;
-- (void)setPhoneChecked:(BOOL)v;
-- (NSString*)infoBirthday;
-- (void)setInfoBirthday:(NSString*)v;
-- (NSString*)infoCaseHistory;
-- (void)setInfoCaseHistory:(NSString*)v;
-- (NSString*)infoNickname;
-- (void)setInfoNickname:(NSString*)v;
-- (long)infoHeight;
-- (void)setInfoHeight:(long)v;
-- (long)infoWeight;
-- (void)setInfoWeight:(long)v;
-- (long)infoGender;
-- (void)setInfoGender:(long)v;
-- (GoJimsdkResponseError*)error;
-- (void)setError:(GoJimsdkResponseError*)v;
 @end
 
 @interface GoJimsdkResetPasswordEmailParams : NSObject {
@@ -673,6 +576,19 @@
 - (void)setError:(GoJimsdkResponseError*)v;
 @end
 
+@interface GoJimsdkUploadAvatarResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (NSString*)url;
+- (void)setURL:(NSString*)v;
+- (NSString*)message;
+- (void)setMessage:(NSString*)v;
+- (GoJimsdkResponseError*)error;
+- (void)setError:(GoJimsdkResponseError*)v;
+@end
+
 @interface GoJimsdkUserInfoParams : NSObject {
 }
 @property(strong, readonly) id _ref;
@@ -695,6 +611,8 @@
 - (void)setUsername:(NSString*)v;
 - (int64_t)registerTime;
 - (void)setRegisterTime:(int64_t)v;
+- (NSString*)avatarURL;
+- (void)setAvatarURL:(NSString*)v;
 - (NSString*)email;
 - (void)setEmail:(NSString*)v;
 - (BOOL)emailChecked;
@@ -807,6 +725,21 @@
 - (void)setOpenID:(NSString*)v;
 @end
 
+@protocol GoJimsdkLoginResponseListener
+- (void)onFailure:(GoJimsdkResponseError*)respErr;
+- (void)onSuccess:(GoJimsdkUserInfoResponse*)respData;
+@end
+
+@protocol GoJimsdkRegisterResponseListener
+- (void)onFailure:(GoJimsdkResponseError*)respErr;
+- (void)onSuccess:(GoJimsdkUserInfoResponse*)respData;
+@end
+
+@protocol GoJimsdkUserInfoResponseListener
+- (void)onFailure:(GoJimsdkResponseError*)respErr;
+- (void)onSuccess:(GoJimsdkUserInfoResponse*)respData;
+@end
+
 @protocol GoJimsdkVerifyEmailResponseListener
 - (void)onFailure:(GoJimsdkResponseError*)respErr;
 - (void)onSuccess:(GoJimsdkVerifyEmailResponse*)respData;
@@ -828,6 +761,7 @@ FOUNDATION_EXPORT NSString* const GoJimsdkTwitterUserRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkUpdateBindEmailRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkUpdateBindPhoneRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkUpdateUserRouter;
+FOUNDATION_EXPORT NSString* const GoJimsdkUploadAvatarRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkUserInfoRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkVerifyEmailRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkVerifySmsRouter;
@@ -848,7 +782,40 @@ FOUNDATION_EXPORT GoJimsdkResetPasswordParams* GoJimsdkNewResetPasswordParams();
 
 FOUNDATION_EXPORT GoJimsdkUpdateUserParams* GoJimsdkNewUpdateUserParams();
 
+@class GoJimsdkLoginResponseListener;
+
+@class GoJimsdkRegisterResponseListener;
+
+@class GoJimsdkUserInfoResponseListener;
+
 @class GoJimsdkVerifyEmailResponseListener;
+
+@interface GoJimsdkLoginResponseListener : NSObject <GoJimsdkLoginResponseListener> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (void)onFailure:(GoJimsdkResponseError*)respErr;
+- (void)onSuccess:(GoJimsdkUserInfoResponse*)respData;
+@end
+
+@interface GoJimsdkRegisterResponseListener : NSObject <GoJimsdkRegisterResponseListener> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (void)onFailure:(GoJimsdkResponseError*)respErr;
+- (void)onSuccess:(GoJimsdkUserInfoResponse*)respData;
+@end
+
+@interface GoJimsdkUserInfoResponseListener : NSObject <GoJimsdkUserInfoResponseListener> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (void)onFailure:(GoJimsdkResponseError*)respErr;
+- (void)onSuccess:(GoJimsdkUserInfoResponse*)respData;
+@end
 
 @interface GoJimsdkVerifyEmailResponseListener : NSObject <GoJimsdkVerifyEmailResponseListener> {
 }
