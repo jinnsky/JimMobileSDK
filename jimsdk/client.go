@@ -117,10 +117,26 @@ func (c *Client) saveCookieJar() {
   if c.cookiejar != nil {
     domain, _ := url.Parse(c.ClusterURL)
     cookies := c.requestAgent.Client.Jar.Cookies(domain)
+    
     for _, cookie := range cookies {
       if cookie.Name == "ring-session" {
         cookie.MaxAge = 365 * 24 * 60 * 60
+        break
       }
+    }
+
+    c.cookiejar.SetCookies(domain, cookies)
+    c.cookiejar.Save()
+  }
+}
+
+func (c *Client) removeCookieJar() {
+  if c.cookiejar != nil {
+    domain, _ := url.Parse(c.ClusterURL)
+    cookies := c.requestAgent.Client.Jar.Cookies(domain)
+
+    for _, cookie := range cookies {
+      c.cookiejar.RemoveCookie(cookie)
     }
 
     c.cookiejar.SetCookies(domain, cookies)
@@ -187,7 +203,7 @@ func (c *Client) HasValidSession() bool {
   domain, _ := url.Parse(c.ClusterURL)
   
   for _, cookie := range c.cookiejar.Cookies(domain) {
-    if cookie.Name == "ring-session" {
+    if cookie.Name == "ring-session" && len(cookie.Value) > 0 {
       return true
     }    
   }

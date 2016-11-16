@@ -123,4 +123,6 @@ func main() {
 			fmt.Println("Avatar message: ", uploadAvatarResponseData.Message)
 		}
 	}
+
+	client.SendLogout()
 }
