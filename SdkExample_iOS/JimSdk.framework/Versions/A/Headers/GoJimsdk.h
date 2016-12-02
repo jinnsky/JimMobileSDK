@@ -153,6 +153,7 @@
 - (GoJimsdkLinkedInUserResponse*)sendLinkedInUser:(NSString*)accessToken;
 - (GoJimsdkUserInfoResponse*)sendLogin:(GoJimsdkLoginParams*)params;
 - (void)sendLoginAsync:(GoJimsdkLoginParams*)params listener:(id<GoJimsdkLoginResponseListener>)listener;
+- (void)sendLogout;
 - (GoJimsdkQqUserResponse*)sendQqUser:(NSString*)openID;
 - (GoJimsdkUserInfoResponse*)sendRegister:(GoJimsdkRegisterParams*)params;
 - (void)sendRegisterAsync:(GoJimsdkRegisterParams*)params listener:(id<GoJimsdkRegisterResponseListener>)listener;
@@ -165,6 +166,7 @@
 - (GoJimsdkUpdateBindPhoneResponse*)sendUpdateBindPhone:(long)userID phone:(NSString*)phone;
 - (GoJimsdkUpdateUserResponse*)sendUpdateUser:(GoJimsdkUpdateUserParams*)params;
 - (GoJimsdkUploadAvatarResponse*)sendUploadAvatar:(NSString*)file;
+- (GoJimsdkUploadAvatarResponse*)sendUploadAvatarBase64:(NSString*)encodedStr;
 - (GoJimsdkUserInfoResponse*)sendUserInfo:(long)userID subUserID:(long)subUserID;
 - (void)sendUserInfoAsync:(long)userID subUserID:(long)subUserID listener:(id<GoJimsdkUserInfoResponseListener>)listener;
 - (GoJimsdkVerifyEmailResponse*)sendVerifyEmail:(NSString*)email;
@@ -761,6 +763,7 @@ FOUNDATION_EXPORT NSString* const GoJimsdkTwitterUserRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkUpdateBindEmailRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkUpdateBindPhoneRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkUpdateUserRouter;
+FOUNDATION_EXPORT NSString* const GoJimsdkUploadAvatarBase64Router;
 FOUNDATION_EXPORT NSString* const GoJimsdkUploadAvatarRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkUserInfoRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkVerifyEmailRouter;

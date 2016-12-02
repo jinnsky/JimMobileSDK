@@ -200,12 +200,14 @@ func (c *Client) decodeUserInfoObject(obj *jason.Object) (id int64,
 }
 
 func (c *Client) HasValidSession() bool {
-  domain, _ := url.Parse(c.ClusterURL)
-  
-  for _, cookie := range c.cookiejar.Cookies(domain) {
-    if cookie.Name == "ring-session" && len(cookie.Value) > 0 {
-      return true
-    }    
+  if c.cookiejar != nil {
+    domain, _ := url.Parse(c.ClusterURL)
+    
+    for _, cookie := range c.cookiejar.Cookies(domain) {
+      if cookie.Name == "ring-session" && len(cookie.Value) > 0 {
+        return true
+      }    
+    }
   }
 
   return false
