@@ -124,5 +124,16 @@ func main() {
 		}
 	}
 
+	feedbackSubmitResponseData := client.SendFeedback("tester@oudmon.com", "test feedback api")
+
+	if feedbackSubmitResponseData != nil {
+		if jimsdk.CatchResponseError(feedbackSubmitResponseData.Error) {
+			fmt.Println(feedbackSubmitResponseData.Error.Key, feedbackSubmitResponseData.Error.Message)
+		} else {
+			fmt.Println("ContactInfo: ", feedbackSubmitResponseData.ContactInfo)
+			fmt.Println("Feedback Content: ", feedbackSubmitResponseData.Content)
+		}
+	}
+
 	client.SendLogout()
 }

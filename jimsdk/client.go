@@ -42,6 +42,10 @@ const (
   WeixinUserRouter = "/v1/users/is-has-weixin-user"
 )
 
+const (
+  FeedbackSubmitRouter = "/v1/feedback/submit"
+)
+
 type Client struct {
   ClusterURL string
   AppID int
