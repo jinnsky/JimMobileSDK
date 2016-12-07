@@ -46,6 +46,10 @@ const (
   FeedbackSubmitRouter = "/v1/feedback/submit"
 )
 
+const (
+  NewsDigestRouter = "/v1/news/list-news-digest"
+)
+
 type Client struct {
   ClusterURL string
   AppID int

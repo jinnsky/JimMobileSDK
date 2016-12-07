@@ -70,12 +70,21 @@
                                     <action selector="tapOnUserLoginButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NaR-Uy-y1Z"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jtE-bu-Mvx">
+                                <rect key="frame" x="36" y="303" width="129" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Fetch News Digest"/>
+                                <connections>
+                                    <action selector="topOnNewsFetchButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hYx-JG-u4y"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <connections>
                         <outlet property="emailVerificationButton" destination="m08-Pz-g4U" id="ynk-c2-X14"/>
                         <outlet property="emailVerificationIndicator" destination="xcp-TY-lnE" id="5tn-Tz-OCi"/>
+                        <outlet property="newsFetchButton" destination="jtE-bu-Mvx" id="Mkc-VM-bwF"/>
                         <outlet property="passwordTextField" destination="FQp-FX-TNj" id="wTd-6f-mpb"/>
                         <outlet property="statusLabel" destination="86a-Yv-bQj" id="z70-bx-8a9"/>
                         <outlet property="userLoginButton" destination="Mke-xR-Cp0" id="AeX-K8-QUy"/>

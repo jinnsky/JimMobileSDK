@@ -40,6 +40,7 @@ func main() {
 
 	if error != nil {
 		fmt.Println(error)
+		return
 	} 
 
 	// Test request timeout
@@ -124,14 +125,28 @@ func main() {
 		}
 	}
 
-	feedbackSubmitResponseData := client.SendFeedback("tester@oudmon.com", "test feedback api")
+	// feedbackSubmitResponseData := client.SendFeedback("tester@oudmon.com", "test feedback api")
 
-	if feedbackSubmitResponseData != nil {
-		if jimsdk.CatchResponseError(feedbackSubmitResponseData.Error) {
-			fmt.Println(feedbackSubmitResponseData.Error.Key, feedbackSubmitResponseData.Error.Message)
+	// if feedbackSubmitResponseData != nil {
+	// 	if jimsdk.CatchResponseError(feedbackSubmitResponseData.Error) {
+	// 		fmt.Println(feedbackSubmitResponseData.Error.Key, feedbackSubmitResponseData.Error.Message)
+	// 	} else {
+	// 		fmt.Println("ContactInfo: ", feedbackSubmitResponseData.ContactInfo)
+	// 		fmt.Println("Feedback Content: ", feedbackSubmitResponseData.Content)
+	// 	}
+	// }
+
+	newsDigestCollection := jimsdk.NewNewsDigestCollection()
+	newsDigestParams := &jimsdk.NewsDigestParams{ FromPage: 0, PageSize: 5, ThumbWidth: 200, ThumbHeight: 100, Language: "zh" }
+	newsDigestResponseData := client.SendNewsDigest(newsDigestParams, newsDigestCollection)
+
+	if newsDigestResponseData != nil {
+		if jimsdk.CatchResponseError(newsDigestResponseData.Error) {
+			fmt.Println(newsDigestResponseData.Error.Key, newsDigestResponseData.Error.Message)
 		} else {
-			fmt.Println("ContactInfo: ", feedbackSubmitResponseData.ContactInfo)
-			fmt.Println("Feedback Content: ", feedbackSubmitResponseData.Content)
+			if len(newsDigestCollection.Items) > 0 {
+				fmt.Println(newsDigestCollection.Items[0].ArticleURL)
+			}
 		}
 	}
 

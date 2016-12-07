@@ -18,9 +18,15 @@
 @class GoJimsdkClient;
 @class GoJimsdkFacebookUserParams;
 @class GoJimsdkFacebookUserResponse;
+@class GoJimsdkFeedbackSubmitParams;
+@class GoJimsdkFeedbackSubmitResponse;
 @class GoJimsdkLinkedInUserParams;
 @class GoJimsdkLinkedInUserResponse;
 @class GoJimsdkLoginParams;
+@class GoJimsdkNewsDigest;
+@class GoJimsdkNewsDigestCollection;
+@class GoJimsdkNewsDigestParams;
+@class GoJimsdkNewsDigestResponse;
 @class GoJimsdkQqUserParams;
 @class GoJimsdkQqUserResponse;
 @class GoJimsdkRegisterInfoParams;
@@ -150,10 +156,12 @@
 - (GoJimsdkBindPhoneResponse*)sendBindPhone:(long)userID phone:(NSString*)phone verificationCode:(NSString*)verificationCode;
 - (GoJimsdkChangePasswordResponse*)sendChangePassword:(NSString*)oldPwd newPwd:(NSString*)newPwd;
 - (GoJimsdkFacebookUserResponse*)sendFacebookUser:(NSString*)accessToken;
+- (GoJimsdkFeedbackSubmitResponse*)sendFeedback:(NSString*)contactInfo content:(NSString*)content;
 - (GoJimsdkLinkedInUserResponse*)sendLinkedInUser:(NSString*)accessToken;
 - (GoJimsdkUserInfoResponse*)sendLogin:(GoJimsdkLoginParams*)params;
 - (void)sendLoginAsync:(GoJimsdkLoginParams*)params listener:(id<GoJimsdkLoginResponseListener>)listener;
 - (void)sendLogout;
+- (GoJimsdkNewsDigestResponse*)sendNewsDigest:(GoJimsdkNewsDigestParams*)params collection:(GoJimsdkNewsDigestCollection*)collection;
 - (GoJimsdkQqUserResponse*)sendQqUser:(NSString*)openID;
 - (GoJimsdkUserInfoResponse*)sendRegister:(GoJimsdkRegisterParams*)params;
 - (void)sendRegisterAsync:(GoJimsdkRegisterParams*)params listener:(id<GoJimsdkRegisterResponseListener>)listener;
@@ -202,6 +210,30 @@
 - (void)setInfoEmail:(NSString*)v;
 - (NSString*)infoGender;
 - (void)setInfoGender:(NSString*)v;
+- (GoJimsdkResponseError*)error;
+- (void)setError:(GoJimsdkResponseError*)v;
+@end
+
+@interface GoJimsdkFeedbackSubmitParams : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (NSString*)contactInfo;
+- (void)setContactInfo:(NSString*)v;
+- (NSString*)content;
+- (void)setContent:(NSString*)v;
+@end
+
+@interface GoJimsdkFeedbackSubmitResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (NSString*)contactInfo;
+- (void)setContactInfo:(NSString*)v;
+- (NSString*)content;
+- (void)setContent:(NSString*)v;
 - (GoJimsdkResponseError*)error;
 - (void)setError:(GoJimsdkResponseError*)v;
 @end
@@ -263,6 +295,60 @@
 - (void)setTwitterID:(NSString*)v;
 - (NSString*)linkedInID;
 - (void)setLinkedInID:(NSString*)v;
+@end
+
+@interface GoJimsdkNewsDigest : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (NSString*)title;
+- (void)setTitle:(NSString*)v;
+- (NSString*)articleURL;
+- (void)setArticleURL:(NSString*)v;
+- (NSString*)thumbURL;
+- (void)setThumbURL:(NSString*)v;
+@end
+
+@interface GoJimsdkNewsDigestCollection : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+// skipped field NewsDigestCollection.Items with unsupported type: *types.Slice
+
+- (GoJimsdkNewsDigest*)getItemAt:(long)index;
+- (long)getSize;
+@end
+
+@interface GoJimsdkNewsDigestParams : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (long)appId;
+- (void)setAppId:(long)v;
+- (long)fromPage;
+- (void)setFromPage:(long)v;
+- (long)pageSize;
+- (void)setPageSize:(long)v;
+- (long)thumbWidth;
+- (void)setThumbWidth:(long)v;
+- (long)thumbHeight;
+- (void)setThumbHeight:(long)v;
+- (NSString*)tags;
+- (void)setTags:(NSString*)v;
+- (NSString*)language;
+- (void)setLanguage:(NSString*)v;
+@end
+
+@interface GoJimsdkNewsDigestResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (GoJimsdkResponseError*)error;
+- (void)setError:(GoJimsdkResponseError*)v;
 @end
 
 @interface GoJimsdkQqUserParams : NSObject {
@@ -751,8 +837,10 @@ FOUNDATION_EXPORT NSString* const GoJimsdkBindEmailRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkBindPhoneRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkChangePasswordRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkFacebookUserRouter;
+FOUNDATION_EXPORT NSString* const GoJimsdkFeedbackSubmitRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkLinkedInUserRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkLoginRouter;
+FOUNDATION_EXPORT NSString* const GoJimsdkNewsDigestRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkQqUserRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkRegisterInfoRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkRegisterRouter;
@@ -776,6 +864,10 @@ FOUNDATION_EXPORT BOOL GoJimsdkCatchResponseError(GoJimsdkResponseError* respErr
 FOUNDATION_EXPORT BOOL GoJimsdkNewClient(NSString* clusterURL, long appID, NSString* jimAppID, NSString* jimAppSecret, NSString* cookieFilePath, GoJimsdkClient** ret0_, NSError** error);
 
 FOUNDATION_EXPORT GoJimsdkLoginParams* GoJimsdkNewLoginParams();
+
+FOUNDATION_EXPORT GoJimsdkNewsDigestCollection* GoJimsdkNewNewsDigestCollection();
+
+FOUNDATION_EXPORT GoJimsdkNewsDigestParams* GoJimsdkNewNewsDigestParams();
 
 FOUNDATION_EXPORT GoJimsdkRegisterInfoParams* GoJimsdkNewRegisterInfoParams();
 
