@@ -151,12 +151,10 @@ class ViewController: UIViewController {
         }
     }
     
-    
     @IBAction func topOnNewsFetchButton(_ sender: Any) {
         DispatchQueue.global().async { [weak self] in
             guard let `self` = self, let sdkClient = self.client else { return }
             guard let newsDigestParams = GoJimsdkNewNewsDigestParams() else { return }
-            guard let newsDigestCollection = GoJimsdkNewNewsDigestCollection() else { return }
             
             newsDigestParams.setFromPage(0)
             newsDigestParams.setPageSize(5)
@@ -164,12 +162,12 @@ class ViewController: UIViewController {
             newsDigestParams.setThumbHeight(100)
             newsDigestParams.setLanguage("zh")
             
-            if let responseData = sdkClient.sendNewsDigest(newsDigestParams, collection: newsDigestCollection) {
+            if let responseData = sdkClient.sendNewsDigest(newsDigestParams) {
                 if let responseError = responseData.error() {
                     print(responseError.message())
                 } else {
-                    if newsDigestCollection.getSize() > 0 {
-                        print(newsDigestCollection.getItemAt(0).articleURL())
+                    if responseData.collection().getSize() > 0 {
+                        print(responseData.collection().getItemAt(0).articleURL())
                     } else {
                         print("No news digest found")
                     }

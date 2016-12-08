@@ -161,7 +161,7 @@
 - (GoJimsdkUserInfoResponse*)sendLogin:(GoJimsdkLoginParams*)params;
 - (void)sendLoginAsync:(GoJimsdkLoginParams*)params listener:(id<GoJimsdkLoginResponseListener>)listener;
 - (void)sendLogout;
-- (GoJimsdkNewsDigestResponse*)sendNewsDigest:(GoJimsdkNewsDigestParams*)params collection:(GoJimsdkNewsDigestCollection*)collection;
+- (GoJimsdkNewsDigestResponse*)sendNewsDigest:(GoJimsdkNewsDigestParams*)params;
 - (GoJimsdkQqUserResponse*)sendQqUser:(NSString*)openID;
 - (GoJimsdkUserInfoResponse*)sendRegister:(GoJimsdkRegisterParams*)params;
 - (void)sendRegisterAsync:(GoJimsdkRegisterParams*)params listener:(id<GoJimsdkRegisterResponseListener>)listener;
@@ -347,6 +347,8 @@
 @property(strong, readonly) id _ref;
 
 - (id)initWithRef:(id)ref;
+- (GoJimsdkNewsDigestCollection*)collection;
+- (void)setCollection:(GoJimsdkNewsDigestCollection*)v;
 - (GoJimsdkResponseError*)error;
 - (void)setError:(GoJimsdkResponseError*)v;
 @end
@@ -864,8 +866,6 @@ FOUNDATION_EXPORT BOOL GoJimsdkCatchResponseError(GoJimsdkResponseError* respErr
 FOUNDATION_EXPORT BOOL GoJimsdkNewClient(NSString* clusterURL, long appID, NSString* jimAppID, NSString* jimAppSecret, NSString* cookieFilePath, GoJimsdkClient** ret0_, NSError** error);
 
 FOUNDATION_EXPORT GoJimsdkLoginParams* GoJimsdkNewLoginParams();
-
-FOUNDATION_EXPORT GoJimsdkNewsDigestCollection* GoJimsdkNewNewsDigestCollection();
 
 FOUNDATION_EXPORT GoJimsdkNewsDigestParams* GoJimsdkNewNewsDigestParams();
 

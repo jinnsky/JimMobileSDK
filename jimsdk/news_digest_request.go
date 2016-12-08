@@ -19,7 +19,8 @@ func NewNewsDigestParams() (*NewsDigestParams) {
 }
 
 type NewsDigestResponse struct {
- Error *ResponseError
+  Collection *NewsDigestCollection
+  Error *ResponseError
 }
 
 type NewsDigest struct {
@@ -32,10 +33,6 @@ type NewsDigestCollection struct {
   Items []*NewsDigest
 }
 
-func NewNewsDigestCollection() (*NewsDigestCollection) {
-  return &NewsDigestCollection{}
-}
-
 func (n *NewsDigestCollection)GetSize() int {
   return len(n.Items)
 }
@@ -44,7 +41,7 @@ func (n *NewsDigestCollection)GetItemAt(index int) (*NewsDigest) {
   return n.Items[index]
 }
 
-func (c *Client) SendNewsDigest(params *NewsDigestParams, collection *NewsDigestCollection) (*NewsDigestResponse) {
+func (c *Client) SendNewsDigest(params *NewsDigestParams) (*NewsDigestResponse) {
   params.AppId = c.AppID
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + NewsDigestRouter).
@@ -75,14 +72,15 @@ func (c *Client) SendNewsDigest(params *NewsDigestParams, collection *NewsDigest
   if err := json.NewDecoder(resp.Body).Decode(&originals); err != nil {
     respData.Error = &ResponseError{ Key: "JSON Decode", Message: "Decode failed" }
   } else {
-    collection.Items = make([]*NewsDigest, len(originals))
+    respData.Collection = &NewsDigestCollection{}
+    respData.Collection.Items = make([]*NewsDigest, len(originals))
 
     for i, original := range originals {
       newsDigest := &NewsDigest{}
       newsDigest.Title = original.Title
       newsDigest.ArticleURL = c.ClusterURL + original.DetailPageSubPath
       newsDigest.ThumbURL = original.ScalePicURL
-      collection.Items[i] = newsDigest
+      respData.Collection.Items[i] = newsDigest
     }
   }
 

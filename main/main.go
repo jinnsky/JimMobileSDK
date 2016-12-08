@@ -136,16 +136,15 @@ func main() {
 	// 	}
 	// }
 
-	newsDigestCollection := jimsdk.NewNewsDigestCollection()
 	newsDigestParams := &jimsdk.NewsDigestParams{ FromPage: 0, PageSize: 5, ThumbWidth: 200, ThumbHeight: 100, Language: "zh" }
-	newsDigestResponseData := client.SendNewsDigest(newsDigestParams, newsDigestCollection)
+	newsDigestResponseData := client.SendNewsDigest(newsDigestParams)
 
 	if newsDigestResponseData != nil {
 		if jimsdk.CatchResponseError(newsDigestResponseData.Error) {
 			fmt.Println(newsDigestResponseData.Error.Key, newsDigestResponseData.Error.Message)
 		} else {
-			if len(newsDigestCollection.Items) > 0 {
-				fmt.Println(newsDigestCollection.Items[0].ArticleURL)
+			if len(newsDigestResponseData.Collection.Items) > 0 {
+				fmt.Println(newsDigestResponseData.Collection.Items[0].ArticleURL)
 			}
 		}
 	}
