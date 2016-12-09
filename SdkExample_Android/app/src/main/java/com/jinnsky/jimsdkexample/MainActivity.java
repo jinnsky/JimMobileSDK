@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
         Button registerButton = (Button) findViewById(R.id.registerButton);
         Button loginButton = (Button) findViewById(R.id.loginButton);
         final TextView useridTextView = (TextView) findViewById(R.id.useridTextView);
+        Button newsFetchButton = (Button) findViewById(R.id.newsFetchButton);
+        final TextView newsUrlTextView = (TextView) findViewById(R.id.newsUrlTextView);
 
         File cacheDir = this.getApplicationContext().getExternalCacheDir();
         File cookieFile = new File(cacheDir, "client_cookie_jar");
@@ -90,11 +92,11 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onSuccess(RegisterResponse registerResponse) {
-                        if (registerResponse.getError() != null) {
-                            Toast.makeText(getApplicationContext(), "Register - Failed. " + registerResponse.getError().getMessage(), Toast.LENGTH_LONG).show();
+                    public void onSuccess(UserInfoResponse userInfoResponse) {
+                        if (userInfoResponse.getError() != null) {
+                            Toast.makeText(getApplicationContext(), "Register - Failed. " + userInfoResponse.getError().getMessage(), Toast.LENGTH_LONG).show();
                         } else {
-                            useridTextView.setText(Long.toString(registerResponse.getID()));
+                            useridTextView.setText(Long.toString(userInfoResponse.getID()));
                             Toast.makeText(getApplicationContext(), "Register - OK.", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -116,12 +118,38 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onSuccess(LoginResponse loginResponse) {
-                        if (loginResponse.getError() != null) {
-                            Toast.makeText(getApplicationContext(), "Login - Failed. " + loginResponse.getError().getMessage(), Toast.LENGTH_LONG).show();
+                    public void onSuccess(UserInfoResponse userInfoResponse) {
+                        if (userInfoResponse.getError() != null) {
+                            Toast.makeText(getApplicationContext(), "Login - Failed. " + userInfoResponse.getError().getMessage(), Toast.LENGTH_LONG).show();
                         } else {
-                            useridTextView.setText(Long.toString(loginResponse.getID()));
+                            useridTextView.setText(Long.toString(userInfoResponse.getID()));
                             Toast.makeText(getApplicationContext(), "Login - OK.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        });
+
+        newsFetchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NewsDigestParams newsDigestParams = Jimsdk.newNewsDigestParams();
+                newsDigestParams.setFromPage(0);
+                newsDigestParams.setPageSize(5);
+                newsDigestParams.setThumbWidth(200);
+                newsDigestParams.setThumbHeight(100);
+                newsDigestParams.setLanguage("zh");
+
+                finalClient.sendNewsDigestAsync(newsDigestParams, new NewsDigestResponseListener() {
+                    @Override
+                    public void onFailure(ResponseError responseError) {
+                        Toast.makeText(getApplicationContext(), "Fetching News Digest - Failed. " + responseError.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onSuccess(NewsDigestResponse newsDigestResponse) {
+                        if (newsDigestResponse.getCollection().getSize() > 0) {
+                            newsUrlTextView.setText(newsDigestResponse.getCollection().getItemAt(0).getArticleURL());
                         }
                     }
                 });

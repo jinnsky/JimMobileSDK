@@ -2,10 +2,11 @@ package jimsdk
 
 import (
 	"encoding/json"
+	"github.com/parnurzeal/gorequest"
 )
 
 type NewsDigestParams struct {
-  AppId int `json:"app-id"`
+  AppID int `json:"app-id"`
   FromPage int `json:"from-page"`
   PageSize int `json:"page-size"`
   ThumbWidth int `json:"pic-w,omitempty"`
@@ -41,14 +42,7 @@ func (n *NewsDigestCollection)GetItemAt(index int) (*NewsDigest) {
   return n.Items[index]
 }
 
-func (c *Client) SendNewsDigest(params *NewsDigestParams) (*NewsDigestResponse) {
-  params.AppId = c.AppID
-
-  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + NewsDigestRouter).
-                                       Set("JIM-APP-SIGN", c.getJimAppSign()).
-                                       Send(params).
-                                       End()
-
+func (c *Client) generateNewsDigestResponseData(resp gorequest.Response, errs []error) (*NewsDigestResponse) {
   respData := &NewsDigestResponse{}
   
   respErr := c.processResponse(resp, errs)
@@ -85,4 +79,49 @@ func (c *Client) SendNewsDigest(params *NewsDigestParams) (*NewsDigestResponse) 
   }
 
   return respData
+}
+
+func (c *Client) SendNewsDigest(params *NewsDigestParams) (*NewsDigestResponse) {
+  params.AppID = c.AppID
+
+  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + NewsDigestRouter).
+                                       Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Send(params).
+                                       End()
+
+  return c.generateNewsDigestResponseData(resp, errs)
+}
+
+type NewsDigestResponseListener interface {
+  OnSuccess(respData *NewsDigestResponse)
+  OnFailure(respErr *ResponseError)
+}
+
+func (c *Client) SendNewsDigestAsync(params *NewsDigestParams, listener NewsDigestResponseListener) {
+  callback := func (resp gorequest.Response, body string, errs []error) {
+    if listener != nil {
+      respData := c.generateNewsDigestResponseData(resp, errs)
+
+      if respData.Error != nil {
+        listener.OnFailure(respData.Error)
+      } else {
+        listener.OnSuccess(respData)
+      }
+    }
+  }
+
+  params.AppID = c.AppID
+
+  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + NewsDigestRouter).
+                                       Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Send(params).
+                                       End(callback)
+
+  if listener != nil {
+    respErr := c.processResponse(resp, errs)
+
+    if respErr != nil {
+      listener.OnFailure(respErr)
+    }
+  }
 }

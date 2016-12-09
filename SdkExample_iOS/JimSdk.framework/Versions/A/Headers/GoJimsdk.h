@@ -59,6 +59,8 @@
 @class GoJimsdkWexinUserParams;
 @protocol GoJimsdkLoginResponseListener;
 @class GoJimsdkLoginResponseListener;
+@protocol GoJimsdkNewsDigestResponseListener;
+@class GoJimsdkNewsDigestResponseListener;
 @protocol GoJimsdkRegisterResponseListener;
 @class GoJimsdkRegisterResponseListener;
 @protocol GoJimsdkUserInfoResponseListener;
@@ -162,6 +164,7 @@
 - (void)sendLoginAsync:(GoJimsdkLoginParams*)params listener:(id<GoJimsdkLoginResponseListener>)listener;
 - (void)sendLogout;
 - (GoJimsdkNewsDigestResponse*)sendNewsDigest:(GoJimsdkNewsDigestParams*)params;
+- (void)sendNewsDigestAsync:(GoJimsdkNewsDigestParams*)params listener:(id<GoJimsdkNewsDigestResponseListener>)listener;
 - (GoJimsdkQqUserResponse*)sendQqUser:(NSString*)openID;
 - (GoJimsdkUserInfoResponse*)sendRegister:(GoJimsdkRegisterParams*)params;
 - (void)sendRegisterAsync:(GoJimsdkRegisterParams*)params listener:(id<GoJimsdkRegisterResponseListener>)listener;
@@ -326,8 +329,8 @@
 @property(strong, readonly) id _ref;
 
 - (id)initWithRef:(id)ref;
-- (long)appId;
-- (void)setAppId:(long)v;
+- (long)appID;
+- (void)setAppID:(long)v;
 - (long)fromPage;
 - (void)setFromPage:(long)v;
 - (long)pageSize;
@@ -820,6 +823,11 @@
 - (void)onSuccess:(GoJimsdkUserInfoResponse*)respData;
 @end
 
+@protocol GoJimsdkNewsDigestResponseListener
+- (void)onFailure:(GoJimsdkResponseError*)respErr;
+- (void)onSuccess:(GoJimsdkNewsDigestResponse*)respData;
+@end
+
 @protocol GoJimsdkRegisterResponseListener
 - (void)onFailure:(GoJimsdkResponseError*)respErr;
 - (void)onSuccess:(GoJimsdkUserInfoResponse*)respData;
@@ -879,6 +887,8 @@ FOUNDATION_EXPORT GoJimsdkUpdateUserParams* GoJimsdkNewUpdateUserParams();
 
 @class GoJimsdkLoginResponseListener;
 
+@class GoJimsdkNewsDigestResponseListener;
+
 @class GoJimsdkRegisterResponseListener;
 
 @class GoJimsdkUserInfoResponseListener;
@@ -892,6 +902,15 @@ FOUNDATION_EXPORT GoJimsdkUpdateUserParams* GoJimsdkNewUpdateUserParams();
 - (instancetype)initWithRef:(id)ref;
 - (void)onFailure:(GoJimsdkResponseError*)respErr;
 - (void)onSuccess:(GoJimsdkUserInfoResponse*)respData;
+@end
+
+@interface GoJimsdkNewsDigestResponseListener : NSObject <GoJimsdkNewsDigestResponseListener> {
+}
+@property(strong, readonly) id _ref;
+
+- (instancetype)initWithRef:(id)ref;
+- (void)onFailure:(GoJimsdkResponseError*)respErr;
+- (void)onSuccess:(GoJimsdkNewsDigestResponse*)respData;
 @end
 
 @interface GoJimsdkRegisterResponseListener : NSObject <GoJimsdkRegisterResponseListener> {

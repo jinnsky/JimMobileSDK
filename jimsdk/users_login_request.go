@@ -56,7 +56,7 @@ func (c *Client) SendLogin(params *LoginParams) (*UserInfoResponse) {
   return respData
 }
 
-func (c *Client)SendLoginAsync(params *LoginParams, listener LoginResponseListener) {
+func (c *Client) SendLoginAsync(params *LoginParams, listener LoginResponseListener) {
   callback := func (resp gorequest.Response, body string, errs []error) {
     if listener != nil {
       respErr := c.processResponse(resp, errs)
