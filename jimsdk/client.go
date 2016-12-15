@@ -21,6 +21,7 @@ const (
   BindPhoneRouter = "/v1/users/bind-phone"
   ChangePasswordRouter = "/v1/users/change-password"
   FacebookUserRouter = "/v1/users/is-has-facebook-user-by-access-token"
+  HasPhoneRouter = "/v1/users/is-has-phone-user"
   LinkedInUserRouter = "/v1/users/is-has-linkin-user"
   LoginRouter = "/v1/users/login"
   QqUserRouter = "/v1/users/is-has-qq-user"

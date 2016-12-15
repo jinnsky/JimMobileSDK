@@ -149,5 +149,19 @@ func main() {
 		}
 	}
 
+	hasPhoneResponseData := client.SendHasPhone("13923561187")
+
+	if hasPhoneResponseData != nil {
+		if jimsdk.CatchResponseError(hasPhoneResponseData.Error) {
+			fmt.Println(hasPhoneResponseData.Error.Key, hasPhoneResponseData.Error.Message)
+		} else {
+			if hasPhoneResponseData.Result {
+				fmt.Println("Phone number has been registered.")
+			} else {
+				fmt.Println("Phone number is OK to register.")
+			}
+		}
+	}
+
 	client.SendLogout()
 }
