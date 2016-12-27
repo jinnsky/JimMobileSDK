@@ -19,6 +19,7 @@ func (c *Client) SendResetPasswordSms(phone string) (*ResetPasswordSmsResponse) 
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + ResetPasswordSmsRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End()
                                    

@@ -17,7 +17,8 @@ type UploadAvatarResponse struct {
 func (c *Client) SendUploadAvatar(file string) (*UploadAvatarResponse) {
   requestAgent := c.getRequestAgent().Post(c.ClusterURL + UploadAvatarRouter).
                                       Type("multipart").
-                                      Set("JIM-APP-SIGN", c.getJimAppSign())
+                                      Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                      Set("JIM-APP-ID", c.JimAppID)
                                        
   if pathToFile, err := filepath.Abs(file); err != nil {
 		requestAgent.Errors = append(requestAgent.Errors, err)
@@ -53,10 +54,11 @@ func (c *Client) SendUploadAvatar(file string) (*UploadAvatarResponse) {
 func (c *Client) SendUploadAvatarBase64(encodedStr string) (*UploadAvatarResponse) {
   var payload = struct {
     Data string `json:"data"`
-  }{ encodedStr }
+  } { encodedStr }
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + UploadAvatarBase64Router).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End()
 

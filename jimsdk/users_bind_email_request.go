@@ -20,6 +20,7 @@ func (c *Client) SendBindEmail(userID int, email string, verificationCode string
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + BindEmailRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End()
 

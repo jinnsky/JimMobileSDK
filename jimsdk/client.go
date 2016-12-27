@@ -117,7 +117,7 @@ func NewClient(clusterURL string, appID int, jimAppID string, jimAppSecret strin
     }
   }
 
-  client.requestAgent = request.Set("JIM-APP-ID", jimAppID)
+  client.requestAgent = request
   client.serverTimestampDiff = apiResult.Time - time.Now().UnixNano() / (1000 * 1000)
 
 	return client, nil

@@ -38,6 +38,7 @@ type UpdateUserResponse struct {
 func (c *Client) SendUpdateUser(params *UpdateUserParams) (*UpdateUserResponse) {
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + UpdateUserRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(params).
                                        End()
                                    

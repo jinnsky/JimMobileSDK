@@ -24,6 +24,7 @@ func (c *Client) SendTwitterUser(userToken string, tokenSecret string) (*Twitter
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + TwitterUserRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End()
 

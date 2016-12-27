@@ -32,6 +32,7 @@ func (c *Client) SendUserInfo(userID int, subUserID int) (*UserInfoResponse) {
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + UserInfoRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End()
 
@@ -91,6 +92,7 @@ func (c *Client) SendUserInfoAsync(userID int, subUserID int, listener UserInfoR
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + UserInfoRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End(callback)
 

@@ -33,6 +33,7 @@ func (c *Client) SendLogin(params *LoginParams) (*UserInfoResponse) {
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + LoginRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(params).
                                        End()
                                    
@@ -84,6 +85,7 @@ func (c *Client) SendLoginAsync(params *LoginParams, listener LoginResponseListe
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + LoginRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(params).
                                        End(callback)
 

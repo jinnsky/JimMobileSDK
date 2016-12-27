@@ -69,6 +69,7 @@ type BloodPressureCommitListResponse struct {
 func (c *Client) SendBloodPressureCommit(params *BloodPressureCommitParams) (*BloodPressureCommitResponse) {
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + BloodPressureCommitRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(params).
                                        End()
 
@@ -90,6 +91,7 @@ func (c *Client) SendBloodPressureCommit(params *BloodPressureCommitParams) (*Bl
 func (c *Client) SendBloodPressureCommitList(paramsList *BloodPressureCommitListParams) (*BloodPressureCommitListResponse) {
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + BloodPressureCommitListRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(paramsList).
                                        End()
 
@@ -118,6 +120,7 @@ func (c *Client) SendBloodPressureSync(lastSyncId int, size int) (*BloodPressure
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + BloodPressureSyncRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End()
 
@@ -153,6 +156,7 @@ func (bpdp *BloodPressureDeleteParams) AddDeleteID(id int64) {
 func (c *Client) SendBloodPressureDelete(params *BloodPressureDeleteParams) (*BloodPressureCommitListResponse) {
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + BloodPressureDeleteRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(params).
                                        End()
 
@@ -181,6 +185,7 @@ type BloodPressureTotalCountResponse struct {
 func (c *Client) SendBloodPressureTotalCount() (*BloodPressureTotalCountResponse) {
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + BloodPressureTotalCountRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        End()
 
   respData := &BloodPressureTotalCountResponse{}
@@ -206,6 +211,7 @@ func (c *Client) SendBloodPressureList(index int, size int) (*BloodPressureCommi
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + BloodPressureListRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End()
 

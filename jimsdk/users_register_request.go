@@ -34,6 +34,7 @@ func (c *Client) SendRegister(params *RegisterParams) (*UserInfoResponse) {
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + RegisterRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(params).
                                        End()
                                    
@@ -85,6 +86,7 @@ func (c *Client) SendRegisterAsync(params *RegisterParams, listener RegisterResp
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + RegisterRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(params).
                                        End(callback)
 

@@ -26,6 +26,7 @@ func (c *Client) SendVerifyEmail(email string) (*VerifyEmailResponse) {
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + VerifyEmailRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End()
 
@@ -49,6 +50,7 @@ func (c *Client) SendVerifyEmailAsync(email string, listener VerifyEmailResponse
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + VerifyEmailRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End(func (resp gorequest.Response, body string, errs []error) {
                                          if listener != nil {

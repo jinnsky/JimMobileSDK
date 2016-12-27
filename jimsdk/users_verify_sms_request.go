@@ -19,6 +19,7 @@ func (c *Client) SendVerifySms(phone string) (*VerifySmsResponse) {
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + VerifySmsRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End()
   

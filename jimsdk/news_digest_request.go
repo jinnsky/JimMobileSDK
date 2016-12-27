@@ -90,6 +90,7 @@ func (c *Client) SendNewsDigest(params *NewsDigestParams) (*NewsDigestResponse) 
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + NewsDigestRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(params).
                                        End()
 
@@ -118,6 +119,7 @@ func (c *Client) SendNewsDigestAsync(params *NewsDigestParams, listener NewsDige
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + NewsDigestRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(params).
                                        End(callback)
 

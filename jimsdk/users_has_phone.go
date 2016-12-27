@@ -19,6 +19,7 @@ func (c *Client) SendHasPhone(phone string) (*HasPhoneResponse) {
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + HasPhoneRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End()
 

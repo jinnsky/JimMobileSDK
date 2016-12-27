@@ -35,6 +35,7 @@ func (c *Client) SendRegisterInfo(params *RegisterInfoParams) (*UserInfoResponse
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + RegisterInfoRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(params).
                                        End()
                                    

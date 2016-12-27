@@ -23,6 +23,7 @@ func (c *Client) SendLinkedInUser(accessToken string) (*LinkedInUserResponse) {
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + LinkedInUserRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End()
 

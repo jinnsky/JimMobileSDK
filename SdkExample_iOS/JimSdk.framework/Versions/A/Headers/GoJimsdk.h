@@ -13,6 +13,13 @@
 @class GoJimsdkBindEmailResponse;
 @class GoJimsdkBindPhoneParams;
 @class GoJimsdkBindPhoneResponse;
+@class GoJimsdkBloodPressureCommitListParams;
+@class GoJimsdkBloodPressureCommitListResponse;
+@class GoJimsdkBloodPressureCommitParams;
+@class GoJimsdkBloodPressureCommitResponse;
+@class GoJimsdkBloodPressureCommitResponseCollection;
+@class GoJimsdkBloodPressureDeleteParams;
+@class GoJimsdkBloodPressureTotalCountResponse;
 @class GoJimsdkChangePasswordParams;
 @class GoJimsdkChangePasswordResponse;
 @class GoJimsdkClient;
@@ -20,6 +27,8 @@
 @class GoJimsdkFacebookUserResponse;
 @class GoJimsdkFeedbackSubmitParams;
 @class GoJimsdkFeedbackSubmitResponse;
+@class GoJimsdkHasPhoneParams;
+@class GoJimsdkHasPhoneResponse;
 @class GoJimsdkLinkedInUserParams;
 @class GoJimsdkLinkedInUserResponse;
 @class GoJimsdkLoginParams;
@@ -116,6 +125,105 @@
 - (void)setError:(GoJimsdkResponseError*)v;
 @end
 
+@interface GoJimsdkBloodPressureCommitListParams : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (long)lastSyncID;
+- (void)setLastSyncID:(long)v;
+// skipped field BloodPressureCommitListParams.Items with unsupported type: *types.Slice
+
+- (void)addParams:(GoJimsdkBloodPressureCommitParams*)params;
+@end
+
+@interface GoJimsdkBloodPressureCommitListResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (GoJimsdkBloodPressureCommitResponseCollection*)collection;
+- (void)setCollection:(GoJimsdkBloodPressureCommitResponseCollection*)v;
+- (GoJimsdkResponseError*)error;
+- (void)setError:(GoJimsdkResponseError*)v;
+@end
+
+@interface GoJimsdkBloodPressureCommitParams : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (double)systolicBP;
+- (void)setSystolicBP:(double)v;
+- (double)diastolicBP;
+- (void)setDiastolicBP:(double)v;
+- (long)pulse;
+- (void)setPulse:(long)v;
+- (NSString*)deviceID;
+- (void)setDeviceID:(NSString*)v;
+- (NSString*)deviceType;
+- (void)setDeviceType:(NSString*)v;
+- (int64_t)time;
+- (void)setTime:(int64_t)v;
+@end
+
+@interface GoJimsdkBloodPressureCommitResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (int64_t)id_;
+- (void)setID:(int64_t)v;
+- (int64_t)userID;
+- (void)setUserID:(int64_t)v;
+- (double)systolicBP;
+- (void)setSystolicBP:(double)v;
+- (double)diastolicBP;
+- (void)setDiastolicBP:(double)v;
+- (long)pulse;
+- (void)setPulse:(long)v;
+- (NSString*)deviceID;
+- (void)setDeviceID:(NSString*)v;
+- (NSString*)deviceType;
+- (void)setDeviceType:(NSString*)v;
+- (int64_t)time;
+- (void)setTime:(int64_t)v;
+- (GoJimsdkResponseError*)error;
+- (void)setError:(GoJimsdkResponseError*)v;
+@end
+
+@interface GoJimsdkBloodPressureCommitResponseCollection : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+// skipped field BloodPressureCommitResponseCollection.Items with unsupported type: *types.Slice
+
+- (GoJimsdkBloodPressureCommitResponse*)getItemAt:(long)index;
+- (long)getSize;
+@end
+
+@interface GoJimsdkBloodPressureDeleteParams : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+// skipped field BloodPressureDeleteParams.Items with unsupported type: *types.Slice
+
+- (void)addDeleteID:(int64_t)id;
+@end
+
+@interface GoJimsdkBloodPressureTotalCountResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (int64_t)count;
+- (void)setCount:(int64_t)v;
+- (GoJimsdkResponseError*)error;
+- (void)setError:(GoJimsdkResponseError*)v;
+@end
+
 @interface GoJimsdkChangePasswordParams : NSObject {
 }
 @property(strong, readonly) id _ref;
@@ -156,9 +264,16 @@
 - (BOOL)hasValidSession;
 - (GoJimsdkBindEmailResponse*)sendBindEmail:(long)userID email:(NSString*)email verificationCode:(NSString*)verificationCode;
 - (GoJimsdkBindPhoneResponse*)sendBindPhone:(long)userID phone:(NSString*)phone verificationCode:(NSString*)verificationCode;
+- (GoJimsdkBloodPressureCommitResponse*)sendBloodPressureCommit:(GoJimsdkBloodPressureCommitParams*)params;
+- (GoJimsdkBloodPressureCommitListResponse*)sendBloodPressureCommitList:(GoJimsdkBloodPressureCommitListParams*)paramsList;
+- (GoJimsdkBloodPressureCommitListResponse*)sendBloodPressureDelete:(GoJimsdkBloodPressureDeleteParams*)params;
+- (GoJimsdkBloodPressureCommitListResponse*)sendBloodPressureList:(long)index size:(long)size;
+- (GoJimsdkBloodPressureCommitListResponse*)sendBloodPressureSync:(long)lastSyncId size:(long)size;
+- (GoJimsdkBloodPressureTotalCountResponse*)sendBloodPressureTotalCount;
 - (GoJimsdkChangePasswordResponse*)sendChangePassword:(NSString*)oldPwd newPwd:(NSString*)newPwd;
 - (GoJimsdkFacebookUserResponse*)sendFacebookUser:(NSString*)accessToken;
 - (GoJimsdkFeedbackSubmitResponse*)sendFeedback:(NSString*)contactInfo content:(NSString*)content;
+- (GoJimsdkHasPhoneResponse*)sendHasPhone:(NSString*)phone;
 - (GoJimsdkLinkedInUserResponse*)sendLinkedInUser:(NSString*)accessToken;
 - (GoJimsdkUserInfoResponse*)sendLogin:(GoJimsdkLoginParams*)params;
 - (void)sendLoginAsync:(GoJimsdkLoginParams*)params listener:(id<GoJimsdkLoginResponseListener>)listener;
@@ -237,6 +352,28 @@
 - (void)setContactInfo:(NSString*)v;
 - (NSString*)content;
 - (void)setContent:(NSString*)v;
+- (GoJimsdkResponseError*)error;
+- (void)setError:(GoJimsdkResponseError*)v;
+@end
+
+@interface GoJimsdkHasPhoneParams : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (long)appID;
+- (void)setAppID:(long)v;
+- (NSString*)phone;
+- (void)setPhone:(NSString*)v;
+@end
+
+@interface GoJimsdkHasPhoneResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (BOOL)result;
+- (void)setResult:(BOOL)v;
 - (GoJimsdkResponseError*)error;
 - (void)setError:(GoJimsdkResponseError*)v;
 @end
@@ -845,9 +982,16 @@
 
 FOUNDATION_EXPORT NSString* const GoJimsdkBindEmailRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkBindPhoneRouter;
+FOUNDATION_EXPORT NSString* const GoJimsdkBloodPressureCommitListRouter;
+FOUNDATION_EXPORT NSString* const GoJimsdkBloodPressureCommitRouter;
+FOUNDATION_EXPORT NSString* const GoJimsdkBloodPressureDeleteRouter;
+FOUNDATION_EXPORT NSString* const GoJimsdkBloodPressureListRouter;
+FOUNDATION_EXPORT NSString* const GoJimsdkBloodPressureSyncRouter;
+FOUNDATION_EXPORT NSString* const GoJimsdkBloodPressureTotalCountRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkChangePasswordRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkFacebookUserRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkFeedbackSubmitRouter;
+FOUNDATION_EXPORT NSString* const GoJimsdkHasPhoneRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkLinkedInUserRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkLoginRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkNewsDigestRouter;
@@ -870,6 +1014,12 @@ FOUNDATION_EXPORT NSString* const GoJimsdkWeiboUserRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkWeixinUserRouter;
 
 FOUNDATION_EXPORT BOOL GoJimsdkCatchResponseError(GoJimsdkResponseError* respError);
+
+FOUNDATION_EXPORT GoJimsdkBloodPressureCommitListParams* GoJimsdkNewBloodPressureCommitListParams();
+
+FOUNDATION_EXPORT GoJimsdkBloodPressureCommitParams* GoJimsdkNewBloodPressureCommitParams();
+
+FOUNDATION_EXPORT GoJimsdkBloodPressureDeleteParams* GoJimsdkNewBloodPressureDeleteParams();
 
 FOUNDATION_EXPORT BOOL GoJimsdkNewClient(NSString* clusterURL, long appID, NSString* jimAppID, NSString* jimAppSecret, NSString* cookieFilePath, GoJimsdkClient** ret0_, NSError** error);
 

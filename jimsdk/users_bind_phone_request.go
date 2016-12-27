@@ -20,6 +20,7 @@ func (c *Client) SendBindPhone(userID int, phone string, verificationCode string
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + BindPhoneRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End()
                                    

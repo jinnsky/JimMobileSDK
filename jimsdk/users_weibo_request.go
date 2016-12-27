@@ -19,6 +19,7 @@ func (c *Client) SendWeiboUser(sinaUID string) (*WeiboUserResponse) {
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + WeiboUserRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End()
 

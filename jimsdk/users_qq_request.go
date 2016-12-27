@@ -19,6 +19,7 @@ func (c *Client) SendQqUser(openID string) (*QqUserResponse) {
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + QqUserRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End()
 

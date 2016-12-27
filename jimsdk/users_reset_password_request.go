@@ -26,6 +26,7 @@ func (c *Client) SendResetPassword(params *ResetPasswordParams) (*ResetPasswordR
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + ResetPasswordRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(params).
                                        End()
                                    

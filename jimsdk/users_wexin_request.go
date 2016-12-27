@@ -19,6 +19,7 @@ func (c *Client) SendWeixinUser(openID string) (*WeixinUserResponse) {
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + WeixinUserRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
                                        End()
 
