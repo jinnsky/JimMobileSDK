@@ -5,6 +5,7 @@ import (
   "JimMobileSDK/jimsdk"
 	"io/ioutil"
 	"encoding/base64"
+	"math"
 )
 
 const clusterURL = "http://api2.jimyun.com"
@@ -149,16 +150,124 @@ func main() {
 		}
 	}
 
-	hasPhoneResponseData := client.SendHasPhone("13923561187")
+	// hasPhoneResponseData := client.SendHasPhone("13923561187")
 
-	if hasPhoneResponseData != nil {
-		if jimsdk.CatchResponseError(hasPhoneResponseData.Error) {
-			fmt.Println(hasPhoneResponseData.Error.Key, hasPhoneResponseData.Error.Message)
+	// if hasPhoneResponseData != nil {
+	// 	if jimsdk.CatchResponseError(hasPhoneResponseData.Error) {
+	// 		fmt.Println(hasPhoneResponseData.Error.Key, hasPhoneResponseData.Error.Message)
+	// 	} else {
+	// 		if hasPhoneResponseData.Result {
+	// 			fmt.Println("Phone number has been registered.")
+	// 		} else {
+	// 			fmt.Println("Phone number is OK to register.")
+	// 		}
+	// 	}
+	// }
+
+	// bpCommitParams := &jimsdk.BloodPressureCommitParams{DeviceID: "123456", 
+	// 																										DeviceType: "BloodPressureTypeC",
+	// 																										SystolicBP: 12.34,
+	// 																										DiastolicBP: 56.78,
+	// 																										Pulse: 90}
+	// bpCommitResponseData := client.SendBloodPressureCommit(bpCommitParams)
+
+	// if bpCommitResponseData != nil {
+	// 	if jimsdk.CatchResponseError(bpCommitResponseData.Error) {
+	// 		fmt.Println(bpCommitResponseData.Error.Key, bpCommitResponseData.Error.Message)
+	// 	} else {
+	// 		fmt.Println(bpCommitResponseData.ID, bpCommitResponseData.Time)
+	// 	}
+	// }
+
+	bpCommitParams1 := &jimsdk.BloodPressureCommitParams{DeviceID: "123456", 
+																											DeviceType: "BloodPressureTypeC",
+																											SystolicBP: 12.34,
+																											DiastolicBP: 56.78,
+																											Pulse: 90,
+																										  Time: 123456}
+
+  bpCommitParams2 := &jimsdk.BloodPressureCommitParams{DeviceID: "123456", 
+																											DeviceType: "BloodPressureTypeC",
+																											SystolicBP: 12.35,
+																											DiastolicBP: 56.79,
+																											Pulse: 91,
+																										  Time: 123457}
+
+  bpCommitParams3 := &jimsdk.BloodPressureCommitParams{DeviceID: "123456", 
+																											DeviceType: "BloodPressureTypeC",
+																											SystolicBP: 12.36,
+																											DiastolicBP: 56.70,
+																											Pulse: 92,
+																											Time: 123458}
+
+  bpCommitParamsList := jimsdk.NewBloodPressureCommitListParams()
+	bpCommitParamsList.LastSyncID = math.MaxUint32
+	bpCommitParamsList.AddParams(bpCommitParams1)
+	bpCommitParamsList.AddParams(bpCommitParams2)
+	bpCommitParamsList.AddParams(bpCommitParams3)
+
+	bpCommitListResponseData := client.SendBloodPressureCommitList(bpCommitParamsList)
+
+	if bpCommitListResponseData != nil {
+		if jimsdk.CatchResponseError(bpCommitListResponseData.Error) {
+			fmt.Println(bpCommitListResponseData.Error.Key, bpCommitListResponseData.Error.Message)
 		} else {
-			if hasPhoneResponseData.Result {
-				fmt.Println("Phone number has been registered.")
+			if bpCommitListResponseData.Collection.GetSize() > 0 {
+				fmt.Println("Upload blood pressure data - Success.")
 			} else {
-				fmt.Println("Phone number is OK to register.")
+				fmt.Println("Upload blood pressure data - Response is empty.")
+			}
+		}
+	}
+
+	// bpSyncResponseData := client.SendBloodPressureSync(0, 2)
+
+	// if bpSyncResponseData != nil {
+	// 	if jimsdk.CatchResponseError(bpSyncResponseData.Error) {
+	// 		fmt.Println(bpSyncResponseData.Error.Key, bpSyncResponseData.Error.Message)
+	// 	} else {
+	// 		if bpSyncResponseData.Collection.GetSize() > 1 {
+	// 			fmt.Println(bpSyncResponseData.Collection.GetItemAt(1).ID)
+	// 		}
+	// 	}
+	// }
+
+	// bpDeleteParams := jimsdk.NewBloodPressureDeleteParams()
+	// bpDeleteParams.AddDeleteID(4541)
+	// bpDeleteResponseData := client.SendBloodPressureDelete(bpDeleteParams)
+
+	// if bpDeleteResponseData != nil {
+	// 	if jimsdk.CatchResponseError(bpDeleteResponseData.Error) {
+	// 		fmt.Println(bpDeleteResponseData.Error.Key, bpDeleteResponseData.Error.Message)
+	// 	} else {
+	// 		if bpDeleteResponseData.Collection.GetSize() > 0 {
+	// 			fmt.Println(bpDeleteResponseData.Collection.GetItemAt(0).ID)
+	// 		}
+	// 	}
+	// }
+
+	bpTotalCountResponseData := client.SendBloodPressureTotalCount()
+
+	if bpTotalCountResponseData != nil {
+		if jimsdk.CatchResponseError(bpTotalCountResponseData.Error) {
+			fmt.Println(bpTotalCountResponseData.Error.Key, bpTotalCountResponseData.Error.Message)
+		} else {
+			fmt.Println("Blood pressure total count:", bpTotalCountResponseData.Count)
+		}
+	}
+
+	bpListResponseData := client.SendBloodPressureList(0, 5)
+
+	if bpListResponseData != nil {
+		if jimsdk.CatchResponseError(bpListResponseData.Error) {
+			fmt.Println(bpListResponseData.Error.Key, bpListResponseData.Error.Message)
+		} else {
+			if bpListResponseData.Collection.GetSize() > 0 {
+				for _, item := range bpListResponseData.Collection.Items {
+					fmt.Println(item.ID)
+				}
+			} else {
+				fmt.Println("Blood pressure list is empty.")
 			}
 		}
 	}

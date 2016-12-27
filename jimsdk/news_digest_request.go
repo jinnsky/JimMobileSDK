@@ -34,11 +34,15 @@ type NewsDigestCollection struct {
   Items []*NewsDigest
 }
 
-func (n *NewsDigestCollection)GetSize() int {
+func (n *NewsDigestCollection) GetSize() int {
   return len(n.Items)
 }
 
-func (n *NewsDigestCollection)GetItemAt(index int) (*NewsDigest) {
+func (n *NewsDigestCollection) GetItemAt(index int) (*NewsDigest) {
+  if index < 0 || index >= len(n.Items) {
+    return nil
+  }
+
   return n.Items[index]
 }
 

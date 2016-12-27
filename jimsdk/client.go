@@ -51,6 +51,15 @@ const (
   NewsDigestRouter = "/v1/news/list-news-digest"
 )
 
+const (
+  BloodPressureCommitRouter = "/v1/blood-pressure/commit"
+  BloodPressureCommitListRouter = "/v1/blood-pressure/commit-list"
+  BloodPressureSyncRouter = "/v1/blood-pressure/sync-from-id"
+  BloodPressureDeleteRouter = "/v1/blood-pressure/delete"
+  BloodPressureTotalCountRouter = "/v1/blood-pressure/total-count"
+  BloodPressureListRouter = "/v1/blood-pressure/list"
+)
+
 type Client struct {
   ClusterURL string
   AppID int
