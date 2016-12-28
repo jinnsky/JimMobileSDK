@@ -272,5 +272,15 @@ func main() {
 		}
 	}
 
+	fwOtaResponseData := client.SendFirmwareLastOta("t90_hw_rev_1_0")
+
+	if fwOtaResponseData != nil {
+		if jimsdk.CatchResponseError(fwOtaResponseData.Error) {
+			fmt.Println(fwOtaResponseData.Error.Key, fwOtaResponseData.Error.Message)
+		} else {
+			fmt.Println("Firmware OTA download URL: ", fwOtaResponseData.DownloadURL)
+		}
+	}
+
 	client.SendLogout()
 }

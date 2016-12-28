@@ -60,6 +60,11 @@ const (
   BloodPressureListRouter = "/v1/blood-pressure/list"
 )
 
+const (
+  FirmwareLastOtaRouter = "/v1/app-update/last-ota"
+  FirmwareOtaInfoRouter = "/v1/app-update/ota-info-by-version"
+)
+
 type Client struct {
   ClusterURL string
   AppID int
