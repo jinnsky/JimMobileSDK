@@ -282,5 +282,17 @@ func main() {
 		}
 	}
 
+	// faqListParams := jimsdk.NewFaqListParams()
+	// faqListParams.Language = "zh"
+	// faqListResponseData := client.SendFaqList(faqListParams)
+
+	// if faqListResponseData != nil {
+	// 	if jimsdk.CatchResponseError(faqListResponseData.Error) {
+	// 		fmt.Println(faqListResponseData.Error.Key, faqListResponseData.Error.Message)
+	// 	} else {
+	// 		fmt.Println(faqListResponseData.Text)
+	// 	}
+	// }
+
 	client.SendLogout()
 }

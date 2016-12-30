@@ -65,6 +65,10 @@ const (
   FirmwareOtaInfoRouter = "/v1/app-update/ota-info-by-version"
 )
 
+const (
+  FaqListRouter = "/v1/app-info/faq-list"
+)
+
 type Client struct {
   ClusterURL string
   AppID int
