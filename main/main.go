@@ -294,5 +294,15 @@ func main() {
 	// 	}
 	// }
 
+	appVersionInfoResponseData := client.SendAppVersionInfo("android")
+
+	if appVersionInfoResponseData != nil {
+		if jimsdk.CatchResponseError(appVersionInfoResponseData.Error) {
+			fmt.Println(appVersionInfoResponseData.Error.Key, appVersionInfoResponseData.Error.Message)
+		} else {
+			fmt.Println("App download URL: ", appVersionInfoResponseData.DownloadURL)
+		}
+	}
+
 	client.SendLogout()
 }

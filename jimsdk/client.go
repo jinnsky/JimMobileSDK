@@ -61,6 +61,7 @@ const (
 )
 
 const (
+  AppVersionInfoRouter = "/v1/app-update/version-info"
   FirmwareLastOtaRouter = "/v1/app-update/last-ota"
   FirmwareOtaInfoRouter = "/v1/app-update/ota-info-by-version"
 )
