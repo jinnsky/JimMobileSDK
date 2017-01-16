@@ -304,5 +304,19 @@ func main() {
 		}
 	}
 
+	systemInfoResponseData := client.SendSystemInfo("MPB", "macOS", "2560*1600", "Wi-Fi")
+
+	if systemInfoResponseData != nil {
+		if jimsdk.CatchResponseError(systemInfoResponseData.Error) {
+			fmt.Println(systemInfoResponseData.Error.Key, systemInfoResponseData.Error.Message)
+		} else {
+			if systemInfoResponseData.Result {
+				fmt.Println("Send system information - OK.")
+		 	} else {
+		    fmt.Println("Send system information - Failed.")
+			}
+		}
+	}
+
 	client.SendLogout()
 }

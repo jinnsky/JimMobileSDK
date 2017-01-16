@@ -6,11 +6,11 @@ import (
 
 type UpdateUserParams struct {
   SubUserID int `json:"sub-users-id,omitempty"`
-  Nickname string `json:"nickname,omitempty"`
-  Height int `json:"height,omitempty"`
-  Weight int `json:"weight,omitempty"`
-  Gender int `json:"sex,omitempty"`
-  Birthday string `json:"birthday,omitempty"`
+  Nickname string `json:"nickname"`
+  Height int `json:"height"`
+  Weight int `json:"weight"`
+  Gender int `json:"sex"`
+  Birthday string `json:"birthday"`
   CaseHistory string `json:"case-history,omitempty"`
 }
 

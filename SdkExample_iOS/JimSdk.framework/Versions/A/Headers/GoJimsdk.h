@@ -9,6 +9,7 @@
 #include <Foundation/Foundation.h>
 #include "GoUniverse.h"
 
+@class GoJimsdkAppVersionInfoResponse;
 @class GoJimsdkBindEmailParams;
 @class GoJimsdkBindEmailResponse;
 @class GoJimsdkBindPhoneParams;
@@ -25,8 +26,11 @@
 @class GoJimsdkClient;
 @class GoJimsdkFacebookUserParams;
 @class GoJimsdkFacebookUserResponse;
+@class GoJimsdkFaqListParams;
+@class GoJimsdkFaqListResponse;
 @class GoJimsdkFeedbackSubmitParams;
 @class GoJimsdkFeedbackSubmitResponse;
+@class GoJimsdkFirmwareOtaInfoResponse;
 @class GoJimsdkHasPhoneParams;
 @class GoJimsdkHasPhoneResponse;
 @class GoJimsdkLinkedInUserParams;
@@ -47,6 +51,7 @@
 @class GoJimsdkResetPasswordSmsParams;
 @class GoJimsdkResetPasswordSmsResponse;
 @class GoJimsdkResponseError;
+@class GoJimsdkSystemInfoResponse;
 @class GoJimsdkTwitterUserParams;
 @class GoJimsdkTwitterUserResponse;
 @class GoJimsdkUpdateBindEmailParams;
@@ -76,6 +81,25 @@
 @class GoJimsdkUserInfoResponseListener;
 @protocol GoJimsdkVerifyEmailResponseListener;
 @class GoJimsdkVerifyEmailResponseListener;
+
+@interface GoJimsdkAppVersionInfoResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (NSString*)type;
+- (void)setType:(NSString*)v;
+- (NSString*)downloadURL;
+- (void)setDownloadURL:(NSString*)v;
+- (NSString*)limit;
+- (void)setLimit:(NSString*)v;
+- (NSString*)current;
+- (void)setCurrent:(NSString*)v;
+- (NSString*)description;
+- (void)setDescription:(NSString*)v;
+- (GoJimsdkResponseError*)error;
+- (void)setError:(GoJimsdkResponseError*)v;
+@end
 
 @interface GoJimsdkBindEmailParams : NSObject {
 }
@@ -262,6 +286,7 @@
 - (long)requestTimeout;
 - (void)setRequestTimeout:(long)v;
 - (BOOL)hasValidSession;
+- (GoJimsdkAppVersionInfoResponse*)sendAppVersionInfo:(NSString*)appType;
 - (GoJimsdkBindEmailResponse*)sendBindEmail:(long)userID email:(NSString*)email verificationCode:(NSString*)verificationCode;
 - (GoJimsdkBindPhoneResponse*)sendBindPhone:(long)userID phone:(NSString*)phone verificationCode:(NSString*)verificationCode;
 - (GoJimsdkBloodPressureCommitResponse*)sendBloodPressureCommit:(GoJimsdkBloodPressureCommitParams*)params;
@@ -272,7 +297,10 @@
 - (GoJimsdkBloodPressureTotalCountResponse*)sendBloodPressureTotalCount;
 - (GoJimsdkChangePasswordResponse*)sendChangePassword:(NSString*)oldPwd newPwd:(NSString*)newPwd;
 - (GoJimsdkFacebookUserResponse*)sendFacebookUser:(NSString*)accessToken;
+- (GoJimsdkFaqListResponse*)sendFaqList:(GoJimsdkFaqListParams*)params;
 - (GoJimsdkFeedbackSubmitResponse*)sendFeedback:(NSString*)contactInfo content:(NSString*)content;
+- (GoJimsdkFirmwareOtaInfoResponse*)sendFirmwareLastOta:(NSString*)curHwVer;
+- (GoJimsdkFirmwareOtaInfoResponse*)sendFirmwareOtaInfoByVersion:(NSString*)curHwVer curFwVer:(NSString*)curFwVer;
 - (GoJimsdkHasPhoneResponse*)sendHasPhone:(NSString*)phone;
 - (GoJimsdkLinkedInUserResponse*)sendLinkedInUser:(NSString*)accessToken;
 - (GoJimsdkUserInfoResponse*)sendLogin:(GoJimsdkLoginParams*)params;
@@ -287,6 +315,7 @@
 - (GoJimsdkResetPasswordResponse*)sendResetPassword:(GoJimsdkResetPasswordParams*)params;
 - (GoJimsdkResetPasswordEmailResponse*)sendResetPasswordEmail:(NSString*)email;
 - (GoJimsdkResetPasswordSmsResponse*)sendResetPasswordSms:(NSString*)phone;
+- (GoJimsdkSystemInfoResponse*)sendSystemInfo:(NSString*)model os:(NSString*)os resolution:(NSString*)resolution network:(NSString*)network;
 - (GoJimsdkTwitterUserResponse*)sendTwitterUser:(NSString*)userToken tokenSecret:(NSString*)tokenSecret;
 - (GoJimsdkUpdateBindEmailResponse*)sendUpdateBindEmail:(long)userID email:(NSString*)email;
 - (GoJimsdkUpdateBindPhoneResponse*)sendUpdateBindPhone:(long)userID phone:(NSString*)phone;
@@ -332,6 +361,32 @@
 - (void)setError:(GoJimsdkResponseError*)v;
 @end
 
+@interface GoJimsdkFaqListParams : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (long)appID;
+- (void)setAppID:(long)v;
+- (NSString*)language;
+- (void)setLanguage:(NSString*)v;
+- (long)from;
+- (void)setFrom:(long)v;
+- (long)size;
+- (void)setSize:(long)v;
+@end
+
+@interface GoJimsdkFaqListResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (NSString*)text;
+- (void)setText:(NSString*)v;
+- (GoJimsdkResponseError*)error;
+- (void)setError:(GoJimsdkResponseError*)v;
+@end
+
 @interface GoJimsdkFeedbackSubmitParams : NSObject {
 }
 @property(strong, readonly) id _ref;
@@ -352,6 +407,27 @@
 - (void)setContactInfo:(NSString*)v;
 - (NSString*)content;
 - (void)setContent:(NSString*)v;
+- (GoJimsdkResponseError*)error;
+- (void)setError:(GoJimsdkResponseError*)v;
+@end
+
+@interface GoJimsdkFirmwareOtaInfoResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (NSString*)limit;
+- (void)setLimit:(NSString*)v;
+- (NSString*)downloadURL;
+- (void)setDownloadURL:(NSString*)v;
+- (NSString*)version;
+- (void)setVersion:(NSString*)v;
+- (NSString*)hardwareVersion;
+- (void)setHardwareVersion:(NSString*)v;
+- (NSString*)description;
+- (void)setDescription:(NSString*)v;
+- (NSString*)date;
+- (void)setDate:(NSString*)v;
 - (GoJimsdkResponseError*)error;
 - (void)setError:(GoJimsdkResponseError*)v;
 @end
@@ -674,6 +750,17 @@
 - (void)setMessage:(NSString*)v;
 @end
 
+@interface GoJimsdkSystemInfoResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (BOOL)result;
+- (void)setResult:(BOOL)v;
+- (GoJimsdkResponseError*)error;
+- (void)setError:(GoJimsdkResponseError*)v;
+@end
+
 @interface GoJimsdkTwitterUserParams : NSObject {
 }
 @property(strong, readonly) id _ref;
@@ -980,6 +1067,7 @@
 - (void)onSuccess:(GoJimsdkVerifyEmailResponse*)respData;
 @end
 
+FOUNDATION_EXPORT NSString* const GoJimsdkAppVersionInfoRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkBindEmailRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkBindPhoneRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkBloodPressureCommitListRouter;
@@ -990,7 +1078,10 @@ FOUNDATION_EXPORT NSString* const GoJimsdkBloodPressureSyncRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkBloodPressureTotalCountRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkChangePasswordRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkFacebookUserRouter;
+FOUNDATION_EXPORT NSString* const GoJimsdkFaqListRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkFeedbackSubmitRouter;
+FOUNDATION_EXPORT NSString* const GoJimsdkFirmwareLastOtaRouter;
+FOUNDATION_EXPORT NSString* const GoJimsdkFirmwareOtaInfoRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkHasPhoneRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkLinkedInUserRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkLoginRouter;
@@ -1001,6 +1092,7 @@ FOUNDATION_EXPORT NSString* const GoJimsdkRegisterRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkResetPasswordEmailRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkResetPasswordRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkResetPasswordSmsRouter;
+FOUNDATION_EXPORT NSString* const GoJimsdkSystemInfoRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkTwitterUserRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkUpdateBindEmailRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkUpdateBindPhoneRouter;
@@ -1022,6 +1114,8 @@ FOUNDATION_EXPORT GoJimsdkBloodPressureCommitParams* GoJimsdkNewBloodPressureCom
 FOUNDATION_EXPORT GoJimsdkBloodPressureDeleteParams* GoJimsdkNewBloodPressureDeleteParams();
 
 FOUNDATION_EXPORT BOOL GoJimsdkNewClient(NSString* clusterURL, long appID, NSString* jimAppID, NSString* jimAppSecret, NSString* cookieFilePath, GoJimsdkClient** ret0_, NSError** error);
+
+FOUNDATION_EXPORT GoJimsdkFaqListParams* GoJimsdkNewFaqListParams();
 
 FOUNDATION_EXPORT GoJimsdkLoginParams* GoJimsdkNewLoginParams();
 

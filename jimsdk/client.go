@@ -70,6 +70,10 @@ const (
   FaqListRouter = "/v1/app-info/faq-list"
 )
 
+const (
+  SystemInfoRouter = "/v1/stat/commit-system-info"
+)
+
 type Client struct {
   ClusterURL string
   AppID int
