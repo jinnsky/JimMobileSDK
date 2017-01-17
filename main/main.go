@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"encoding/base64"
 	"math"
+	"time"
 )
 
 const clusterURL = "http://api2.jimyun.com"
@@ -269,6 +270,19 @@ func main() {
 			} else {
 				fmt.Println("Blood pressure list is empty.")
 			}
+		}
+	}
+
+	bpDeviceTroubleResponseData := client.SendBloodPressureDeviceTrouble("BloodPressure Device", 
+																																			 "DeviceID", 
+																																			 "E-1", 
+																																			 time.Now().UnixNano() / (1000 * 1000))
+
+  if bpDeviceTroubleResponseData != nil {
+		if jimsdk.CatchResponseError(bpDeviceTroubleResponseData.Error) {
+			fmt.Println(bpDeviceTroubleResponseData.Error.Key, bpDeviceTroubleResponseData.Error.Message)
+		} else {
+			fmt.Println("Trouble: ", bpDeviceTroubleResponseData.TroubleType)
 		}
 	}
 

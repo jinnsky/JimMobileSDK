@@ -231,3 +231,46 @@ func (c *Client) SendBloodPressureList(index int, size int) (*BloodPressureCommi
 
   return respData
 }
+
+type BloodPressureDeviceTroubleResponse struct {
+  ID int64 `json:"id"`
+  AppID int64 `json:"app-id"`
+  UserID int64 `json:"users-id"`
+  DeviceType string `json:"device-type"`
+  DeviceID string `json:"device-id"`
+  TroubleType string `json:"trouble-type"`
+  Time int64 `json:"time"`
+  Error *ResponseError
+}
+
+func (c *Client) SendBloodPressureDeviceTrouble(deviceType string, 
+                                                deviceID string, 
+                                                trouble string, 
+                                                time int64) (*BloodPressureDeviceTroubleResponse) {
+  var payload = struct {
+    DeviceType string `json:"device-type"`
+    DeviceID string `json:"device-id"`
+    Trouble string `json:"trouble"`
+    Time int64 `json:"time"`
+  } { deviceType, deviceID, trouble, time }
+
+  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + BloodPressureDeviceTroubleRouter).
+                                       Set("JIM-APP-SIGN", c.getJimAppSign()).
+                                       Set("JIM-APP-ID", c.JimAppID).
+                                       Send(payload).
+                                       End()
+
+  respData := &BloodPressureDeviceTroubleResponse{}
+
+  respErr := c.processResponse(resp, errs)
+  if respErr != nil {
+    respData.Error = respErr
+    return respData
+  }
+
+  if err := json.NewDecoder(resp.Body).Decode(respData); err != nil {
+    return nil
+  }
+
+  return respData
+}

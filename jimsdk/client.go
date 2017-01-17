@@ -58,6 +58,7 @@ const (
   BloodPressureDeleteRouter = "/v1/blood-pressure/delete"
   BloodPressureTotalCountRouter = "/v1/blood-pressure/total-count"
   BloodPressureListRouter = "/v1/blood-pressure/list"
+  BloodPressureDeviceTroubleRouter = "/v1/blood-pressure/commit-device-trouble"
 )
 
 const (
