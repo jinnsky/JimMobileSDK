@@ -20,6 +20,7 @@
 @class GoJimsdkBloodPressureCommitResponse;
 @class GoJimsdkBloodPressureCommitResponseCollection;
 @class GoJimsdkBloodPressureDeleteParams;
+@class GoJimsdkBloodPressureDeviceTroubleResponse;
 @class GoJimsdkBloodPressureTotalCountResponse;
 @class GoJimsdkChangePasswordParams;
 @class GoJimsdkChangePasswordResponse;
@@ -237,6 +238,29 @@
 - (void)addDeleteID:(int64_t)id;
 @end
 
+@interface GoJimsdkBloodPressureDeviceTroubleResponse : NSObject {
+}
+@property(strong, readonly) id _ref;
+
+- (id)initWithRef:(id)ref;
+- (int64_t)id_;
+- (void)setID:(int64_t)v;
+- (int64_t)appID;
+- (void)setAppID:(int64_t)v;
+- (int64_t)userID;
+- (void)setUserID:(int64_t)v;
+- (NSString*)deviceType;
+- (void)setDeviceType:(NSString*)v;
+- (NSString*)deviceID;
+- (void)setDeviceID:(NSString*)v;
+- (NSString*)troubleType;
+- (void)setTroubleType:(NSString*)v;
+- (int64_t)time;
+- (void)setTime:(int64_t)v;
+- (GoJimsdkResponseError*)error;
+- (void)setError:(GoJimsdkResponseError*)v;
+@end
+
 @interface GoJimsdkBloodPressureTotalCountResponse : NSObject {
 }
 @property(strong, readonly) id _ref;
@@ -292,6 +316,7 @@
 - (GoJimsdkBloodPressureCommitResponse*)sendBloodPressureCommit:(GoJimsdkBloodPressureCommitParams*)params;
 - (GoJimsdkBloodPressureCommitListResponse*)sendBloodPressureCommitList:(GoJimsdkBloodPressureCommitListParams*)paramsList;
 - (GoJimsdkBloodPressureCommitListResponse*)sendBloodPressureDelete:(GoJimsdkBloodPressureDeleteParams*)params;
+- (GoJimsdkBloodPressureDeviceTroubleResponse*)sendBloodPressureDeviceTrouble:(NSString*)deviceType deviceID:(NSString*)deviceID trouble:(NSString*)trouble time:(int64_t)time;
 - (GoJimsdkBloodPressureCommitListResponse*)sendBloodPressureList:(long)index size:(long)size;
 - (GoJimsdkBloodPressureCommitListResponse*)sendBloodPressureSync:(long)lastSyncId size:(long)size;
 - (GoJimsdkBloodPressureTotalCountResponse*)sendBloodPressureTotalCount;
@@ -1073,6 +1098,7 @@ FOUNDATION_EXPORT NSString* const GoJimsdkBindPhoneRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkBloodPressureCommitListRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkBloodPressureCommitRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkBloodPressureDeleteRouter;
+FOUNDATION_EXPORT NSString* const GoJimsdkBloodPressureDeviceTroubleRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkBloodPressureListRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkBloodPressureSyncRouter;
 FOUNDATION_EXPORT NSString* const GoJimsdkBloodPressureTotalCountRouter;

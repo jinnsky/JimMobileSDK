@@ -89,7 +89,7 @@ func (c *Client) SendBloodPressureCommit(params *BloodPressureCommitParams) (*Bl
 }
 
 func (c *Client) SendBloodPressureCommitList(paramsList *BloodPressureCommitListParams) (*BloodPressureCommitListResponse) {
-  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + BloodPressureCommitListRouter).
+  resp, body, errs := c.getRequestAgent().Post(c.ClusterURL + BloodPressureCommitListRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
                                        Set("JIM-APP-ID", c.JimAppID).
                                        Send(paramsList).
@@ -106,7 +106,7 @@ func (c *Client) SendBloodPressureCommitList(paramsList *BloodPressureCommitList
   respData.Collection = &BloodPressureCommitResponseCollection{}
 
   if err := json.NewDecoder(resp.Body).Decode(&respData.Collection.Items); err != nil {
-    respData.Error = &ResponseError{ Key: "JSON Decode", Message: "Decode failed" }
+    respData.Error = &ResponseError{ Key: "JSON decode failed", Message: body }
   }
 
   return respData
@@ -118,7 +118,7 @@ func (c *Client) SendBloodPressureSync(lastSyncId int, size int) (*BloodPressure
     Size int `json:"size"`
   } { lastSyncId, size }
 
-  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + BloodPressureSyncRouter).
+  resp, body, errs := c.getRequestAgent().Post(c.ClusterURL + BloodPressureSyncRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
                                        Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
@@ -135,7 +135,7 @@ func (c *Client) SendBloodPressureSync(lastSyncId int, size int) (*BloodPressure
   respData.Collection = &BloodPressureCommitResponseCollection{}
 
   if err := json.NewDecoder(resp.Body).Decode(&respData.Collection.Items); err != nil {
-    respData.Error = &ResponseError{ Key: "JSON Decode", Message: "Decode failed" }
+    respData.Error = &ResponseError{ Key: "JSON decode failed", Message: body }
   }
 
   return respData
@@ -154,7 +154,7 @@ func (bpdp *BloodPressureDeleteParams) AddDeleteID(id int64) {
 }
 
 func (c *Client) SendBloodPressureDelete(params *BloodPressureDeleteParams) (*BloodPressureCommitListResponse) {
-  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + BloodPressureDeleteRouter).
+  resp, body, errs := c.getRequestAgent().Post(c.ClusterURL + BloodPressureDeleteRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
                                        Set("JIM-APP-ID", c.JimAppID).
                                        Send(params).
@@ -171,7 +171,7 @@ func (c *Client) SendBloodPressureDelete(params *BloodPressureDeleteParams) (*Bl
   respData.Collection = &BloodPressureCommitResponseCollection{}
 
   if err := json.NewDecoder(resp.Body).Decode(&respData.Collection.Items); err != nil {
-    respData.Error = &ResponseError{ Key: "JSON Decode", Message: "Decode failed" }
+    respData.Error = &ResponseError{ Key: "JSON decode failed", Message: body }
   }
 
   return respData
@@ -209,7 +209,7 @@ func (c *Client) SendBloodPressureList(index int, size int) (*BloodPressureCommi
     Size int `json:"size"`
   } {index, size}
 
-  resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + BloodPressureListRouter).
+  resp, body, errs := c.getRequestAgent().Post(c.ClusterURL + BloodPressureListRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
                                        Set("JIM-APP-ID", c.JimAppID).
                                        Send(payload).
@@ -226,7 +226,7 @@ func (c *Client) SendBloodPressureList(index int, size int) (*BloodPressureCommi
   respData.Collection = &BloodPressureCommitResponseCollection{}
 
   if err := json.NewDecoder(resp.Body).Decode(&respData.Collection.Items); err != nil {
-    respData.Error = &ResponseError{ Key: "JSON Decode", Message: "Decode failed" }
+    respData.Error = &ResponseError{ Key: "JSON decode failed", Message: body }
   }
 
   return respData

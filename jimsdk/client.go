@@ -265,7 +265,7 @@ func (c *Client) processResponse(resp gorequest.Response, errs []error) *Respons
     return respError
   }
 
-  if resp.StatusCode == 422 {
+  if resp.StatusCode != 200 {
     if err := json.NewDecoder(resp.Body).Decode(respError); err == nil {
       return respError
     }
