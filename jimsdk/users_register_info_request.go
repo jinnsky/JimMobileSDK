@@ -31,7 +31,9 @@ func NewRegisterInfoParams() (*RegisterInfoParams) {
 }
 
 func (c *Client) SendRegisterInfo(params *RegisterInfoParams) (*UserInfoResponse) {
-  params.AppID = c.AppID
+  if len(params.Password) > 0 {
+    params.Password = c.getMD5String(params.Password)
+  }
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + RegisterInfoRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).

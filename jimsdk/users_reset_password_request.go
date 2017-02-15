@@ -22,7 +22,9 @@ type ResetPasswordResponse struct {
 }
 
 func (c *Client) SendResetPassword(params *ResetPasswordParams) (*ResetPasswordResponse) {
-  params.AppID = c.AppID
+  if len(params.Password) > 0 {
+    params.Password = c.getMD5String(params.Password)
+  }
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + ResetPasswordRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).

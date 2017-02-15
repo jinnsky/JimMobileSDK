@@ -29,7 +29,9 @@ type LoginResponseListener interface {
 }
 
 func (c *Client) SendLogin(params *LoginParams) (*UserInfoResponse) {
-  params.AppID = c.AppID
+  if len(params.Password) > 0 {
+    params.Password = c.getMD5String(params.Password)
+  }
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + LoginRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
@@ -81,8 +83,10 @@ func (c *Client) SendLoginAsync(params *LoginParams, listener LoginResponseListe
     }
   }
 
-  params.AppID = c.AppID
-
+  if len(params.Password) > 0 {
+    params.Password = c.getMD5String(params.Password)
+  }
+  
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + LoginRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
                                        Set("JIM-APP-ID", c.JimAppID).

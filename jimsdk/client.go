@@ -88,11 +88,14 @@ type Client struct {
 
 func (c *Client) getJimAppSign() (string) {
   serverTime := strconv.FormatInt(time.Now().UnixNano() / (1000 * 1000) + c.serverTimestampDiff, 10)
-  hasher := md5.New()
-  hasher.Write([]byte(c.JimAppSecret + serverTime))
-
-  return hex.EncodeToString(hasher.Sum(nil)) + "," + serverTime
+  return c.getMD5String(c.JimAppSecret + serverTime) + "," + serverTime
 }
+
+func (c *Client) getMD5String(orignal string) (string) {
+  hasher := md5.New()
+  hasher.Write([]byte(orignal))
+  return hex.EncodeToString(hasher.Sum(nil))
+} 
 
 func NewClient(clusterURL string, appID int, jimAppID string, jimAppSecret string, cookieFilePath string) (*Client, error) {
   client := &Client {

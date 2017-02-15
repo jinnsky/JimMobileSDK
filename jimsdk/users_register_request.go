@@ -30,7 +30,9 @@ type RegisterResponseListener interface {
 }
 
 func (c *Client) SendRegister(params *RegisterParams) (*UserInfoResponse) {
-  params.AppID = c.AppID
+  if len(params.Password) > 0 {
+    params.Password = c.getMD5String(params.Password)
+  }
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + RegisterRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).
@@ -82,7 +84,9 @@ func (c *Client) SendRegisterAsync(params *RegisterParams, listener RegisterResp
     }
   }
 
-  params.AppID = c.AppID
+  if len(params.Password) > 0 {
+    params.Password = c.getMD5String(params.Password)
+  }
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + RegisterRouter).
                                        Set("JIM-APP-SIGN", c.getJimAppSign()).

@@ -28,7 +28,7 @@ func (t *tempListener) OnFailure(respErr *jimsdk.ResponseError) {
 	fmt.Println(respErr.Key, respErr.Message)
 }
 
-func EncodeJPEGImageFile(path string) (string, error) {
+func encodeJPEGImageFile(path string) (string, error) {
 	buff, err := ioutil.ReadFile(path)
 	if err != nil {
 		return "", err
@@ -54,9 +54,9 @@ func main() {
 	// Remove request timeout
 	client.RequestTimeout = -1
 	
-	registerParams := &jimsdk.RegisterParams{ Username: "testerv1", 
+	registerParams := &jimsdk.RegisterParams{ Username: "testerv107", 
 																						Password: "123456", 
-																						Email: "testerv1@oudmon.com" }	
+																						Email: "testerv107@oudmon.com" }	
 	registerResponseData := client.SendRegister(registerParams)
 
 	if registerResponseData != nil {
@@ -83,7 +83,7 @@ func main() {
 			}
 		}
 	} else {
-		loginParams := &jimsdk.LoginParams{ Username: "testerv2",
+		loginParams := &jimsdk.LoginParams{ Username: "testerv107",
 																				Password: "654321" }
 		loginResponseData := client.SendLogin(loginParams)
 
@@ -113,17 +113,16 @@ func main() {
 		}
 	}
 
-	uploadAvatarResponseData := client.SendUploadAvatar("avatar.png")
+	if encodedStr, err := encodeJPEGImageFile("avatar.jpg"); err == nil {
+		uploadAvatarResponseData := client.SendUploadAvatarBase64(encodedStr)
 
-	// encodedStr, _ := EncodeJPGImageFile("avatar.jpg")
-	// uploadAvatarResponseData := client.SendUploadAvatarBase64(encodedStr)
-
-	if uploadAvatarResponseData != nil {
-		if jimsdk.CatchResponseError(uploadAvatarResponseData.Error) {
-			fmt.Println(uploadAvatarResponseData.Error.Key, uploadAvatarResponseData.Error.Message)
-		} else {
-			fmt.Println("Avatar URL: ", uploadAvatarResponseData.URL)
-			fmt.Println("Avatar message: ", uploadAvatarResponseData.Message)
+		if uploadAvatarResponseData != nil {
+			if jimsdk.CatchResponseError(uploadAvatarResponseData.Error) {
+				fmt.Println(uploadAvatarResponseData.Error.Key, uploadAvatarResponseData.Error.Message)
+			} else {
+				fmt.Println("Avatar URL: ", uploadAvatarResponseData.URL)
+				fmt.Println("Avatar message: ", uploadAvatarResponseData.Message)
+			}
 		}
 	}
 

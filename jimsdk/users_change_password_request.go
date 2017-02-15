@@ -15,6 +15,9 @@ type ChangePasswordResponse struct {
 }
 
 func (c *Client) SendChangePassword(oldPwd string, newPwd string) (*ChangePasswordResponse) {
+  oldPwd = c.getMD5String(oldPwd)
+  newPwd = c.getMD5String(newPwd)
+
   payload := ChangePasswordParams{ OldPassword: oldPwd, NewPassword: newPwd }
 
   resp, _, errs := c.getRequestAgent().Post(c.ClusterURL + ChangePasswordRouter).
