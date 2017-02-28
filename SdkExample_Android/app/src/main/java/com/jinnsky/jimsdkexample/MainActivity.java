@@ -37,19 +37,13 @@ public class MainActivity extends AppCompatActivity {
             client = Jimsdk.newClient("http://api2.jimyun.com", 23, "iu3TKjwRUCGfIwtTH9gXeYsq", "kJek81coyFG4V3eSg79b82HU", cookieFile.getPath());
 
             if (client.hasValidSession()) {
-                client.sendUserInfoAsync(0, 0, new UserInfoResponseListener() {
-                    @Override
-                    public void onFailure(ResponseError responseError) {
+                final UserInfoResponse response = client.sendUserInfo(0, 0);
 
-                    }
-
-                    @Override
-                    public void onSuccess(UserInfoResponse userInfoResponse) {
-                        if (userInfoResponse.getError() == null) {
-                            useridTextView.setText(Long.toString(userInfoResponse.getID()));
-                        }
-                    }
-                });
+                if (response.getError() == null) {
+                    useridTextView.setText(Long.toString(response.getID()));
+                } else {
+                    throw new Exception("Can't create client");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,99 +54,111 @@ public class MainActivity extends AppCompatActivity {
         emailVerificationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finalClient.sendVerifyEmailAsync("yangjingtian@oudmon.com", new VerifyEmailResponseListener() {
+                new Thread(new Runnable() {
                     @Override
-                    public void onFailure(ResponseError responseError) {
-                        Toast.makeText(getApplicationContext(), "Sent verification email - Failed. " + responseError.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                    public void run() {
+                        final VerifyEmailResponse response = finalClient.sendVerifyEmail("yangjingtian@oudmon.com");
 
-                    @Override
-                    public void onSuccess(VerifyEmailResponse verifyEmailResponse) {
-                        if (verifyEmailResponse.getResult()) {
-                            Toast.makeText(getApplicationContext(), "Sent verification email - OK.", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Sent verification email - Failed.", Toast.LENGTH_LONG).show();
-                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (response.getResult()) {
+                                    Toast.makeText(getApplicationContext(), "Sent verification email - OK.", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Sent verification email - Failed.", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
                     }
-                });
+                }).start();
             }
         });
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RegisterParams registerParams = Jimsdk.newRegisterParams();
-                registerParams.setUsername(usernameEditText.getText().toString());
-                registerParams.setPassword(passwordEditText.getText().toString());
-
-                finalClient.sendRegisterAsync(registerParams, new RegisterResponseListener() {
+                new Thread(new Runnable() {
                     @Override
-                    public void onFailure(ResponseError responseError) {
-                        Toast.makeText(getApplicationContext(), "Register - Failed. " + responseError.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                    public void run() {
+                        RegisterParams registerParams = Jimsdk.newRegisterParams();
+                        registerParams.setUsername(usernameEditText.getText().toString());
+                        registerParams.setPassword(passwordEditText.getText().toString());
 
-                    @Override
-                    public void onSuccess(UserInfoResponse userInfoResponse) {
-                        if (userInfoResponse.getError() != null) {
-                            Toast.makeText(getApplicationContext(), "Register - Failed. " + userInfoResponse.getError().getMessage(), Toast.LENGTH_LONG).show();
-                        } else {
-                            useridTextView.setText(Long.toString(userInfoResponse.getID()));
-                            Toast.makeText(getApplicationContext(), "Register - OK.", Toast.LENGTH_LONG).show();
-                        }
+                        final UserInfoResponse response = finalClient.sendRegister(registerParams);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (response.getError() != null) {
+                                    Toast.makeText(getApplicationContext(), "Register - Failed. " + response.getError().getMessage(), Toast.LENGTH_LONG).show();
+                                } else {
+                                    useridTextView.setText(Long.toString(response.getID()));
+                                    Toast.makeText(getApplicationContext(), "Register - OK.", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
                     }
-                });
+                }).start();
             }
         });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginParams loginParams = Jimsdk.newLoginParams();
-                loginParams.setUsername(usernameEditText.getText().toString());
-                loginParams.setPassword(passwordEditText.getText().toString());
-
-                finalClient.sendLoginAsync(loginParams, new LoginResponseListener() {
+                new Thread(new Runnable() {
                     @Override
-                    public void onFailure(ResponseError responseError) {
-                        Toast.makeText(getApplicationContext(), "Login - Failed. " + responseError.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                    public void run() {
+                        LoginParams loginParams = Jimsdk.newLoginParams();
+                        loginParams.setUsername(usernameEditText.getText().toString());
+                        loginParams.setPassword(passwordEditText.getText().toString());
 
-                    @Override
-                    public void onSuccess(UserInfoResponse userInfoResponse) {
-                        if (userInfoResponse.getError() != null) {
-                            Toast.makeText(getApplicationContext(), "Login - Failed. " + userInfoResponse.getError().getMessage(), Toast.LENGTH_LONG).show();
-                        } else {
-                            useridTextView.setText(Long.toString(userInfoResponse.getID()));
-                            Toast.makeText(getApplicationContext(), "Login - OK.", Toast.LENGTH_LONG).show();
-                        }
+                        final UserInfoResponse response = finalClient.sendLogin(loginParams);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (response.getError() != null) {
+                                    Toast.makeText(getApplicationContext(), "Login - Failed. " + response.getError().getMessage(), Toast.LENGTH_LONG).show();
+                                } else {
+                                    useridTextView.setText(Long.toString(response.getID()));
+                                    Toast.makeText(getApplicationContext(), "Login - OK.", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
                     }
-                });
+                }).start();
             }
         });
 
         newsFetchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NewsDigestParams newsDigestParams = Jimsdk.newNewsDigestParams();
-                newsDigestParams.setFromPage(0);
-                newsDigestParams.setPageSize(5);
-                newsDigestParams.setThumbWidth(200);
-                newsDigestParams.setThumbHeight(100);
-                newsDigestParams.setLanguage("zh");
-
-                finalClient.sendNewsDigestAsync(newsDigestParams, new NewsDigestResponseListener() {
+                new Thread(new Runnable() {
                     @Override
-                    public void onFailure(ResponseError responseError) {
-                        Toast.makeText(getApplicationContext(), "Fetching News Digest - Failed. " + responseError.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                    public void run() {
+                        NewsDigestParams newsDigestParams = Jimsdk.newNewsDigestParams();
+                        newsDigestParams.setFromPage(0);
+                        newsDigestParams.setPageSize(5);
+                        newsDigestParams.setThumbWidth(200);
+                        newsDigestParams.setThumbHeight(100);
+                        newsDigestParams.setLanguage("zh");
 
-                    @Override
-                    public void onSuccess(NewsDigestResponse newsDigestResponse) {
-                        if (newsDigestResponse.getCollection().getSize() > 0) {
-                            newsUrlTextView.setText(newsDigestResponse.getCollection().getItemAt(0).getArticleURL());
-                        }
+                        final NewsDigestResponse response = finalClient.sendNewsDigest(newsDigestParams);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (response.getError() != null) {
+                                    Toast.makeText(getApplicationContext(), "Fetching News Digest - Failed. " + response.getError().getMessage(), Toast.LENGTH_LONG).show();
+                                } else {
+                                    if (response.getCollection().getSize() > 0) {
+                                        newsUrlTextView.setText(response.getCollection().getItemAt(0).getArticleURL());
+                                    }
+                                }
+                            }
+                        });
                     }
-                });
+                }).start();
             }
         });
     }

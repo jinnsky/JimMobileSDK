@@ -16,6 +16,7 @@ class ViewController: UIViewController {
         static let AppID = 23
         static let JimAppID = "iu3TKjwRUCGfIwtTH9gXeYsq"
         static let JimAppSecret = "kJek81coyFG4V3eSg79b82HU"
+        static let CookieJarFile = "client_cookie_jar"
     }
     
     var client: GoJimsdkClient? = nil
@@ -36,7 +37,7 @@ class ViewController: UIViewController {
         emailVerificationIndicator.isHidden = true
         
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let filepath = documentsDirectory?.appendingPathComponent("client_cookie_jar").path
+        let filepath = documentsDirectory?.appendingPathComponent(SdkConstants.CookieJarFile).path
         
         GoJimsdkNewClient(SdkConstants.ClusterURL,
                           SdkConstants.AppID,
